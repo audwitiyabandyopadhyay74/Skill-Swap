@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import GradientBlinds from "./backgrounds/GradientBlinds";
 import FoldText from "./texts/FoldText";
 import DriftWall from "./DriftWall";
@@ -9,19 +10,25 @@ const handleAnimationComplete = () => {
 };
 
 const LetsMakeit = () => {
-  const items = [
-    { image: "https://res.cloudinary.com/dnr6j10en/image/upload/v1788590152/IMG-20260905-WA0005_mixy6w.jpg", title: "Peaks", href: "https://example.com/one" },
-    { image: "https://res.cloudinary.com/dnr6j10en/image/upload/v1788590153/IMG-20260905-WA0003_h7acua.jpg", title: "Pup", href: "https://example.com/two" },
-    { image: "https://res.cloudinary.com/dnr6j10en/image/upload/v1788590153/IMG-20260905-WA0004_msrgoa.jpg", title: "Falls", href: "https://example.com/three" },
-    // … keep or repeat items as needed
-  ];
+  const router = useRouter();
+
+  const handleGetStarted = () => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("ss_token");
+      if (token) {
+        router.push("/dashboard");
+      } else {
+        router.push("/auth/signup");
+      }
+    }
+  };
 
   return (
     <div className="w-full h-screen relative items-center justify-center overflow-hidden">
       {/* Background layer with low z-index */}
       <div className="absolute inset-0 z-[0]">
         <GradientBlinds
-     gradientColors={['#FF9FFC', '#5227FF']}
+    gradientColors={['#FF9FFC', '#5227FF']}
     angle={20}
     noise={0.5}
     blindCount={16}
@@ -55,7 +62,12 @@ const LetsMakeit = () => {
           fontWeight={800}
           color="#fff"
         />
-        <button className="rounded-full w-70 h-20  box-content shadow-2xl text-white   mt-10 z-100 bg-green-600 animate-bounce cursor-pointer hover:w-80 hover:animate-none">Get Started</button>
+        <button 
+          onClick={handleGetStarted}
+          className="rounded-full w-70 h-20  box-content shadow-2xl text-white   mt-10 z-[100] bg-green-600 animate-bounce cursor-pointer hover:w-80 hover:animate-none font-bold text-xl flex items-center justify-center active:scale-95 transition-all"
+        >
+          Get Started
+        </button>
 
        
       </div>
