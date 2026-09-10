@@ -40,10 +40,15 @@ const ScrollStack = ({
     return parseFloat(value) || 0;
   }, []);
 
-  const getElementOffset = useCallback((element) => {
+  const getStaticOffsetTop = useCallback((element) => {
     if (!element) return 0;
-    const rect = element.getBoundingClientRect();
-    return rect.top + window.scrollY;
+    let top = 0;
+    let curr = element;
+    while (curr) {
+      top += curr.offsetTop || 0;
+      curr = curr.offsetParent;
+    }
+    return top;
   }, []);
 
   const updateCardTransforms = useCallback(() => {
@@ -59,12 +64,12 @@ const ScrollStack = ({
     const scaleEndPositionPx = parsePercentage(scaleEndPosition, containerHeight);
 
     const endElement = scroller.querySelector('.scroll-stack-end');
-    const endElementTop = endElement ? getElementOffset(endElement) : 0;
+    const endElementTop = endElement ? getStaticOffsetTop(endElement) : 0;
 
     cards.forEach((card, i) => {
       if (!card) return;
 
-      const cardTop = getElementOffset(card);
+      const cardTop = getStaticOffsetTop(card);
       const triggerStart = cardTop - stackPositionPx - itemStackDistance * i;
       const triggerEnd = cardTop - scaleEndPositionPx;
       const pinStart = cardTop - stackPositionPx - itemStackDistance * i;
@@ -87,7 +92,7 @@ const ScrollStack = ({
         let topCardIndex = 0;
         for (let j = 0; j < cards.length; j++) {
           if (!cards[j]) continue;
-          const jCardTop = getElementOffset(cards[j]);
+          const jCardTop = getStaticOffsetTop(cards[j]);
           const jTriggerStart = jCardTop - stackPositionPx - itemStackDistance * j;
           if (scrollTop >= jTriggerStart) {
             topCardIndex = j;
@@ -132,8 +137,9 @@ const ScrollStack = ({
     blurAmount,
     onStackComplete,
     parsePercentage,
-    getElementOffset
+    getStaticOffsetTop
   ]);
+
 
   useEffect(() => {
     const scroller = scrollerRef.current;
