@@ -83,3 +83,9 @@ export const contactAPI = {
   send: (body) => apiFetch('/contact', { method: 'POST', body: JSON.stringify(body) }),
 };
 
+export const aiAPI = {
+  generatePost: (body) => apiFetch('/ai/generate-post', { method: 'POST', body: JSON.stringify(body) }),
+  generateRoadmap: (body) => apiFetch('/ai/generate-roadmap', { method: 'POST', body: JSON.stringify(body) }),
+};
+
+

@@ -12,6 +12,7 @@ import postRoutes from './routes/posts.js';
 import messageRoutes from './routes/messages.js';
 import uploadRoutes from './routes/upload.js';
 import contactRoutes from './routes/contact.js';
+import aiRoutes from './routes/ai.js';
 import { setupSocket } from './socket.js';
 
 dotenv.config();
@@ -52,6 +53,8 @@ app.use('/api/posts', postRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/ai', aiRoutes);
+
 
 
 app.get('/api/health', (_, res) =>

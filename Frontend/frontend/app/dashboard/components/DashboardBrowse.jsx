@@ -32,6 +32,7 @@ import {
   FaMusic,
   FaArrowRight,
   FaUserFriends,
+  FaMagic,
 } from 'react-icons/fa';
 import BorderGlow from '../../components/BorderGlow';
 
@@ -481,6 +482,8 @@ const ProposalModal = ({ post, onClose, onSuccess }) => {
   );
 };
 
+import AIRoadmapModal from './AIRoadmapModal';
+
 export default function DashboardBrowse({ user, onCreatePost, onRefresh, onOpenChat }) {
   const [subTab, setSubTab] = useState('posts');
   const [activeCategory, setActiveCategory] = useState('all');
@@ -491,6 +494,9 @@ export default function DashboardBrowse({ user, onCreatePost, onRefresh, onOpenC
   const [allUsers, setAllUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [proposalPost, setProposalPost] = useState(null);
+  const [showAiRoadmap, setShowAiRoadmap] = useState(false);
+  const [aiRoadmapSkill, setAiRoadmapSkill] = useState('');
+
 
   const fetchData = async (q = '') => {
     setLoading(true);
@@ -682,12 +688,21 @@ const normalizeSkill = (s) => {
             </p>
           </div>
 
-          <button
-            onClick={onCreatePost}
-            className="px-6 py-3.5 rounded-2xl bg-[#00ff62] text-black font-black text-sm hover:bg-emerald-400 transition cursor-pointer shadow-[0_0_25px_rgba(0,255,98,0.4)] flex items-center justify-center gap-2 self-start md:self-auto hover:scale-105"
-          >
-            <span className="text-lg leading-none">+</span> Post Skill Exchange
-          </button>
+          <div className="flex items-center gap-3 self-start md:self-auto">
+            <button
+              onClick={() => setShowAiRoadmap(true)}
+              className="px-5 py-3.5 rounded-2xl bg-gradient-to-r from-purple-500 via-indigo-500 to-[#00ff62] text-black font-black text-xs md:text-sm hover:opacity-90 transition cursor-pointer shadow-[0_0_25px_rgba(168,85,247,0.4)] flex items-center justify-center gap-2 hover:scale-105"
+            >
+              <FaMagic className="text-sm" /> ✨ Gemini AI Roadmap
+            </button>
+
+            <button
+              onClick={onCreatePost}
+              className="px-6 py-3.5 rounded-2xl bg-[#00ff62] text-black font-black text-xs md:text-sm hover:bg-emerald-400 transition cursor-pointer shadow-[0_0_25px_rgba(0,255,98,0.4)] flex items-center justify-center gap-2 hover:scale-105"
+            >
+              <span className="text-lg leading-none">+</span> Post Skill Exchange
+            </button>
+          </div>
         </div>
 
         {/* Live Metrics Bar */}
@@ -1058,6 +1073,17 @@ const normalizeSkill = (s) => {
           onSuccess={() => fetchData(search)}
         />
       )}
+
+      {showAiRoadmap && (
+        <AIRoadmapModal
+          initialSkill={aiRoadmapSkill}
+          onClose={() => {
+            setShowAiRoadmap(false);
+            setAiRoadmapSkill('');
+          }}
+        />
+      )}
     </div>
   );
 }
+
