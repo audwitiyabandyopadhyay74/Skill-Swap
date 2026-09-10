@@ -17,7 +17,7 @@ const MasterTheSkillOfHelping = () => {
   ];
 
   return (
-    <div className="w-screen h-screen relative items-center justify-center">
+    <div className="w-full h-screen relative items-center justify-center overflow-hidden">
       {/* Background layer with low z-index */}
       <div className="absolute inset-0 z-[0]">
         <LightPillar
@@ -31,9 +31,10 @@ const MasterTheSkillOfHelping = () => {
       </div>
 
       {/* Foreground section unchanged, just corrected z-index */}
-      {/* <div className="w-screen h-screen flex items-end justify-center p-12 z-[10]"> */}
+      {/* <div className="w-full h-screen flex items-end justify-center p-12 z-[10]"> */}
         
-<div className="w-screen h-screen flex flex-col  items-center justify-center gap-34">
+<div className="w-full h-screen flex flex-col  items-center justify-center gap-34">
+
 
 <StrokeText
   text="Mastering The Skill                  
