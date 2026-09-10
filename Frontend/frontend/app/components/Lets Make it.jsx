@@ -1,0 +1,65 @@
+"use client";
+import React from "react";
+import GradientBlinds from "./backgrounds/GradientBlinds";
+import FoldText from "./texts/FoldText";
+import DriftWall from "./DriftWall";
+
+const handleAnimationComplete = () => {
+  console.log("All letters have animated!");
+};
+
+const LetsMakeit = () => {
+  const items = [
+    { image: "https://res.cloudinary.com/dnr6j10en/image/upload/v1788590152/IMG-20260905-WA0005_mixy6w.jpg", title: "Peaks", href: "https://example.com/one" },
+    { image: "https://res.cloudinary.com/dnr6j10en/image/upload/v1788590153/IMG-20260905-WA0003_h7acua.jpg", title: "Pup", href: "https://example.com/two" },
+    { image: "https://res.cloudinary.com/dnr6j10en/image/upload/v1788590153/IMG-20260905-WA0004_msrgoa.jpg", title: "Falls", href: "https://example.com/three" },
+    // … keep or repeat items as needed
+  ];
+
+  return (
+    <div className="w-screen h-[100vh] relative items-center justify-center    ">
+      {/* Background layer with low z-index */}
+      <div className="absolute inset-0 z-[0]">
+        <GradientBlinds
+     gradientColors={['#FF9FFC', '#5227FF']}
+    angle={20}
+    noise={0.5}
+    blindCount={16}
+    blindMinWidth={60}
+    spotlightRadius={0.5}
+    spotlightSoftness={1}
+    spotlightOpacity={1}
+    mouseDampening={0.15}
+    distortAmount={0}
+    shineDirection="left"
+    mixBlendMode="lighten"
+    color1="#FF9FFC"
+    color2="#5227FF"
+        />
+      </div>
+
+      {/* Foreground section unchanged, just corrected z-index */}
+      <div className="w-screen h-screen flex-col flex items-center justify-center p-12 z-[10] gap-14">
+        <FoldText
+          text="So, What Are You Waiting For?"
+          splitBy="char"
+          hinge="top"
+          trigger="scroll"
+          duration={0.6}
+          stagger={0.045}
+          ease="power3.out"
+          perspective={700}
+          creaseShading={0.55}
+          fontSize={80}
+          fontWeight={800}
+          color="#fff"
+        />
+        <button className="rounded-full w-70 h-20  box-content shadow-2xl text-white   mt-10 z-100 bg-green-600 animate-bounce cursor-pointer hover:w-80 hover:animate-none">Get Started</button>
+
+       
+      </div>
+    </div>
+  );
+};
+
+export default LetsMakeit;

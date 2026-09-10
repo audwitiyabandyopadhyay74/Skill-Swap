@@ -1,0 +1,36 @@
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+import { memoryDB } from '../dbStore.js';
+import mongoose from 'mongoose';
+
+const protect = async (req, res, next) => {
+  let token;
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+  if (!token) {
+    return res.status(401).json({ message: 'Not authorized, no token' });
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret123');
+    if (mongoose.connection.readyState === 1) {
+      req.user = await User.findById(decoded.id).select('-password');
+    }
+    if (!req.user) {
+      const memUser = memoryDB.findUserById(decoded.id);
+      if (memUser) {
+        req.user = { ...memUser };
+        delete req.user.password;
+      }
+    }
+    if (!req.user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+    next();
+  } catch {
+    return res.status(401).json({ message: 'Not authorized, token failed' });
+  }
+};
+
+export { protect };
+export default protect;

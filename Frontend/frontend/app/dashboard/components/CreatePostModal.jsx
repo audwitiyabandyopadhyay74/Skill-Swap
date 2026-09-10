@@ -1,0 +1,171 @@
+'use client';
+import React, { useState } from 'react';
+import { postsAPI } from '../../lib/api';
+import { FaTimes, FaLightbulb, FaBullseye, FaRocket, FaSparkles } from 'react-icons/fa';
+import BorderGlow from '../../components/BorderGlow';
+import { useToast } from '../../components/ToastContext';
+import SkillInput from '../../components/SkillInput';
+
+
+export default function CreatePostModal({ onClose, onSuccess }) {
+  const toast = useToast();
+  const [title, setTitle] = useState('');
+  const [skillOffered, setSkillOffered] = useState('');
+  const [skillWanted, setSkillWanted] = useState('');
+  const [description, setDescription] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!title.trim() || !skillOffered.trim() || !skillWanted.trim()) {
+      setError('Title, Skill Offered, and Skill Needed are all required');
+      toast.error('Please fill out all required fields');
+      return;
+    }
+    setLoading(true);
+    setError('');
+    try {
+      await postsAPI.create({
+        title: title.trim(),
+        skillOffered: skillOffered.trim(),
+        skillWanted: skillWanted.trim(),
+        description: description.trim(),
+      });
+      toast.success('Skill exchange request published!');
+      onSuccess();
+      onClose();
+    } catch (err) {
+      setError(err.message);
+      toast.error(err.message || 'Failed to publish post');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-xl z-[100] flex items-center justify-center p-4 font-sans animate-in fade-in duration-200">
+      <BorderGlow
+        backgroundColor="#101018"
+        borderRadius={32}
+        glowColor="143 100 50"
+        glowIntensity={1.3}
+        edgeSensitivity={35}
+        colors={['#00ff62', '#3b82f6', '#8b5cf6']}
+        className="w-full max-w-lg shadow-[0_30px_70px_rgba(0,0,0,0.9)] relative overflow-hidden"
+      >
+        {/* Ambient Top Glow Blob */}
+        <div className="absolute top-0 right-0 w-60 h-60 bg-gradient-to-br from-[#00ff62]/15 via-indigo-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+        <div className="p-6 md:p-7 space-y-5 relative z-10">
+          {/* Header */}
+          <div className="flex items-start justify-between pb-4 border-b border-white/[0.08]">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded-full bg-[#00ff62]/15 text-[#00ff62] border border-[#00ff62]/30 text-[10px] font-mono font-bold uppercase tracking-wider">
+                  New Exchange
+                </span>
+              </div>
+              <h3 className="text-white font-black text-xl tracking-tight">
+                Post Skill Exchange Request
+              </h3>
+              <p className="text-white/40 text-xs">
+                Offer your expertise in exchange for learning a new skill
+              </p>
+            </div>
+
+            <button
+              onClick={onClose}
+              className="w-9 h-9 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-white/50 hover:text-white flex items-center justify-center transition-all duration-300 hover:rotate-90 cursor-pointer shadow-md flex-shrink-0"
+            >
+              <FaTimes className="text-sm" />
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="text-white/60 text-[11px] font-mono font-extrabold uppercase tracking-wider block mb-1.5">
+                Post Title *
+              </label>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="e.g. Seeking Python Tutor in Exchange for Graphic Design"
+                className="w-full bg-black/40 border border-white/10 rounded-2xl px-4 py-3.5 text-white text-xs md:text-sm outline-none focus:border-[#00ff62] focus:bg-black/60 focus:shadow-[0_0_15px_rgba(0,255,98,0.2)] placeholder:text-white/20 transition-all font-sans"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <label className="text-[#00ff62] text-[11px] font-mono font-extrabold uppercase tracking-wider block mb-1.5 flex items-center gap-1">
+                  <FaLightbulb /> Skill You Offer *
+                </label>
+                <SkillInput
+                  value={skillOffered}
+                  onChange={(val) => setSkillOffered(val)}
+                  placeholder="e.g. Graphic Design"
+                  className="focus:border-[#00ff62] focus:shadow-[0_0_15px_rgba(0,255,98,0.25)]"
+                />
+              </div>
+              <div>
+                <label className="text-indigo-400 text-[11px] font-mono font-extrabold uppercase tracking-wider block mb-1.5 flex items-center gap-1">
+                  <FaBullseye /> Skill You Need *
+                </label>
+                <SkillInput
+                  value={skillWanted}
+                  onChange={(val) => setSkillWanted(val)}
+                  placeholder="e.g. Python"
+                  className="focus:border-indigo-400 focus:shadow-[0_0_15px_rgba(99,102,241,0.25)]"
+                />
+              </div>
+            </div>
+
+
+            <div>
+              <label className="text-white/60 text-[11px] font-mono font-extrabold uppercase tracking-wider block mb-1.5">
+                Description / Context
+              </label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Provide details on what you'd like to build/learn, your general availability, or learning goals..."
+                rows={3}
+                className="w-full bg-black/40 border border-white/10 rounded-2xl px-4 py-3.5 text-white text-xs md:text-sm outline-none focus:border-[#00ff62] focus:bg-black/60 focus:shadow-[0_0_15px_rgba(0,255,98,0.2)] placeholder:text-white/20 resize-none transition-all font-sans leading-relaxed"
+              />
+            </div>
+
+            {error && (
+              <p className="text-rose-400 text-xs font-mono bg-rose-500/10 border border-rose-500/20 p-2.5 rounded-xl">
+                {error}
+              </p>
+            )}
+
+            <div className="flex items-center gap-3 pt-3 border-t border-white/[0.06]">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 py-3.5 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 text-white/70 font-extrabold text-xs transition-all cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 py-3.5 rounded-2xl bg-gradient-to-r from-[#00ff62] to-emerald-400 text-black font-black text-xs uppercase tracking-wider hover:opacity-95 transition-all cursor-pointer disabled:opacity-50 shadow-[0_0_25px_rgba(0,255,98,0.4)] hover:shadow-[0_0_35px_rgba(0,255,98,0.6)] flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  'Publishing...'
+                ) : (
+                  <>
+                    <span>Publish Request</span>
+                    <FaRocket className="text-sm" />
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      </BorderGlow>
+    </div>
+  );
+}
