@@ -41,9 +41,12 @@ export const sessionsAPI = {
   list: () => apiFetch('/sessions'),
   create: (body) => apiFetch('/sessions', { method: 'POST', body: JSON.stringify(body) }),
   updateStatus: (id, body) => apiFetch(`/sessions/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+  complete: (id) => apiFetch(`/sessions/${id}`, { method: 'PATCH', body: JSON.stringify({ status: 'completed' }) }),
+  rate: (id, body) => apiFetch(`/sessions/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
   sendMessage: (id, text) =>
     apiFetch(`/sessions/${id}/messages`, { method: 'POST', body: JSON.stringify({ text }) }),
 };
+
 
 export const postsAPI = {
   list: (params = {}) => {

@@ -513,9 +513,13 @@ export default function DashboardSessions({ user, onLaunchMeet, onOpenChat }) {
           session={ratingModalSession}
           user={user}
           onClose={() => setRatingModalSession(null)}
-          onSuccess={fetchAllData}
+          onSubmitRating={async (sessionId, ratingData) => {
+            await sessionsAPI.rate(sessionId, ratingData);
+            fetchAllData();
+          }}
         />
       )}
+
     </div>
   );
 }
