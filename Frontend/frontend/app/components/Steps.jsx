@@ -5,8 +5,8 @@ import { FaRocket, FaPen, FaCommentDots } from 'react-icons/fa';
 
 const Steps = () => {
   return (
-    <div className="w-full bg-[#0a0a0a] min-h-screen relative overflow-hidden">
-      {/* Ambient glow */}
+    <div className="w-full bg-[#0a0a0a] min-h-screen relative overflow-hidden text-white">
+      {/* Ambient background glow */}
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-indigo-600/10 blur-[120px] pointer-events-none z-0" />
 
       <ScrollStack
@@ -39,7 +39,7 @@ const Steps = () => {
               <span className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md text-white/70 text-sm font-medium tracking-wide">
                 01 — Getting Started
               </span>
-              <FaRocket className="text-4xl" />
+              <FaRocket className="text-4xl text-indigo-400" />
             </div>
             <div>
               <h2 className="text-4xl font-bold text-white leading-tight tracking-tight mb-3">
@@ -68,7 +68,7 @@ const Steps = () => {
               <span className="px-4 py-2 rounded-full bg-white/15 backdrop-blur-md text-white/90 text-sm font-medium tracking-wide">
                 02 — Create
               </span>
-              <FaPen className="text-4xl" />
+              <FaPen className="text-4xl text-cyan-300" />
             </div>
             <div>
               <h2 className="text-4xl font-bold text-white leading-tight tracking-tight mb-3">
@@ -97,7 +97,7 @@ const Steps = () => {
               <span className="px-4 py-2 rounded-full bg-white/20 backdrop-blur-md text-white/90 text-sm font-medium tracking-wide">
                 03 — Connect
               </span>
-              <FaCommentDots className="text-4xl" />
+              <FaCommentDots className="text-4xl text-white" />
             </div>
             <div>
               <h2 className="text-4xl font-bold text-white leading-tight tracking-tight mb-3">
