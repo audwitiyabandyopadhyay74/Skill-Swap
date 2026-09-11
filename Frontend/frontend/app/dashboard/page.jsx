@@ -85,7 +85,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col font-sans relative selection:bg-[#00ff62] selection:text-black overflow-hidden">
+    <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col font-sans relative selection:bg-[#00ff62] selection:text-black">
       {/* Ambient React Bits Aurora Background */}
       <div className="fixed inset-0 pointer-events-none opacity-30 z-0">
         <Aurora
