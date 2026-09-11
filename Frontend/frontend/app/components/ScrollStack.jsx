@@ -27,13 +27,12 @@ const ScrollStack = ({
   baseScale = 0.85,
   rotationAmount = 0,
   blurAmount = 0,
-  onStackComplete
+  onStackComplete,
 }) => {
   const scrollerRef = useRef(null);
   const stackCompletedRef = useRef(false);
   const rafIdRef = useRef(null);
   const cardsRef = useRef([]);
-  // Cache static offsets — only updated on mount & resize, not during scroll
   const cardOffsetsRef = useRef([]);
   const endOffsetRef = useRef(0);
 
@@ -44,17 +43,15 @@ const ScrollStack = ({
     return parseFloat(value) || 0;
   }, []);
 
-  // Re-measure all card positions (expensive — only called on mount/resize)
   const measureOffsets = useCallback(() => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
-    const cards = cardsRef.current;
-    cardOffsetsRef.current = cards.map(card =>
+    cardOffsetsRef.current = cardsRef.current.map(card =>
       card ? Math.round(card.getBoundingClientRect().top + window.scrollY) : 0
     );
-    const endElement = scroller.querySelector('.scroll-stack-end');
-    endOffsetRef.current = endElement
-      ? Math.round(endElement.getBoundingClientRect().top + window.scrollY)
+    const endEl = scroller.querySelector('.scroll-stack-end');
+    endOffsetRef.current = endEl
+      ? Math.round(endEl.getBoundingClientRect().top + window.scrollY)
       : 0;
   }, []);
 
@@ -80,7 +77,6 @@ const ScrollStack = ({
       const pinStart = triggerStart;
       const pinEnd = endElementTop - containerHeight / 2;
 
-      // Scale progress
       let scaleProgress = 0;
       if (scrollTop > triggerStart && triggerEnd > triggerStart) {
         scaleProgress = Math.min(1, Math.max(0, (scrollTop - triggerStart) / (triggerEnd - triggerStart)));
@@ -96,13 +92,10 @@ const ScrollStack = ({
       if (blurAmount) {
         let topCardIndex = 0;
         for (let j = 0; j < cards.length; j++) {
-          const jCardTop = cardOffsets[j] || 0;
-          const jTriggerStart = jCardTop - stackPositionPx - itemStackDistance * j;
+          const jTriggerStart = (cardOffsets[j] || 0) - stackPositionPx - itemStackDistance * j;
           if (scrollTop >= jTriggerStart) topCardIndex = j;
         }
-        if (i < topCardIndex) {
-          blur = Math.min(10, (topCardIndex - i) * blurAmount);
-        }
+        if (i < topCardIndex) blur = Math.min(10, (topCardIndex - i) * blurAmount);
       }
 
       let translateY = 0;
@@ -112,12 +105,7 @@ const ScrollStack = ({
         translateY = pinEnd - cardTop + stackPositionPx + itemStackDistance * i;
       }
 
-      // Round aggressively to prevent sub-pixel jitter
-      const ty = Math.round(translateY);
-      const sc = Math.round(scale * 1000) / 1000;
-      const ro = Math.round(rotation * 10) / 10;
-
-      card.style.transform = `translate3d(0, ${ty}px, 0) scale(${sc}) rotate(${ro}deg)`;
+      card.style.transform = `translate3d(0, ${Math.round(translateY)}px, 0) scale(${Math.round(scale * 1000) / 1000}) rotate(${Math.round(rotation * 10) / 10}deg)`;
       card.style.filter = blur > 0 ? `blur(${Math.round(blur)}px)` : 'none';
 
       if (i === cards.length - 1) {
@@ -130,17 +118,7 @@ const ScrollStack = ({
         }
       }
     });
-  }, [
-    itemScale,
-    itemStackDistance,
-    stackPosition,
-    scaleEndPosition,
-    baseScale,
-    rotationAmount,
-    blurAmount,
-    onStackComplete,
-    parsePercentage,
-  ]);
+  }, [itemScale, itemStackDistance, stackPosition, scaleEndPosition, baseScale, rotationAmount, blurAmount, onStackComplete, parsePercentage]);
 
   useEffect(() => {
     const scroller = scrollerRef.current;
@@ -150,12 +128,9 @@ const ScrollStack = ({
     cardsRef.current = cards;
 
     cards.forEach((card, i) => {
-      if (i < cards.length - 1) {
-        card.style.marginBottom = `${itemDistance}px`;
-      }
+      if (i < cards.length - 1) card.style.marginBottom = `${itemDistance}px`;
     });
 
-    // Initial measure + render
     measureOffsets();
     updateCardTransforms();
 
@@ -165,7 +140,6 @@ const ScrollStack = ({
     };
 
     const onResize = () => {
-      // Re-measure positions whenever layout changes
       measureOffsets();
       updateCardTransforms();
     };
