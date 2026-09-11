@@ -602,20 +602,7 @@ const normalizeSkill = (s) => {
       });
     });
 
-    const fallbackSkills = [
-      { name: 'React.js', count: 18 },
-      { name: 'UI/UX Design', count: 14 },
-      { name: 'Python', count: 12 },
-      { name: 'AI & Data', count: 10 },
-      { name: 'Node.js', count: 9 },
-      { name: 'TypeScript', count: 7 },
-      { name: 'Tailwind CSS', count: 6 },
-      { name: 'Digital Marketing', count: 5 }
-    ];
-
     const sortedNames = Object.keys(frequencyMap).sort((a, b) => frequencyMap[b] - frequencyMap[a]);
-
-    if (sortedNames.length === 0) return fallbackSkills;
 
     return sortedNames.slice(0, 8).map((name) => ({
       name,
@@ -992,38 +979,43 @@ const normalizeSkill = (s) => {
                 </p>
 
                 <div className="flex flex-wrap gap-2 pt-1">
-                  {dynamicTrendingSkills.map((sk, skIdx) => {
-                    const isActive = search.toLowerCase() === sk.name.toLowerCase();
-
-                    return (
-                      <button
-                        key={`trend-${sk.name}-${skIdx}`}
-                        onClick={() => {
-                          if (isActive) {
-                            setSearch('');
-                            fetchData('');
-                          } else {
-                            setSearch(sk.name);
-                            fetchData(sk.name);
-                          }
-                        }}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-mono font-extrabold transition cursor-pointer flex items-center gap-1.5 border ${
-                          isActive
-                            ? 'bg-[#00ff62] text-black border-[#00ff62] shadow-[0_0_15px_rgba(0,255,98,0.4)] scale-105'
-                            : 'bg-[#00ff62]/10 hover:bg-[#00ff62]/20 text-[#00ff62] border-[#00ff62]/30 hover:border-[#00ff62]/60 shadow-[0_0_10px_rgba(0,255,98,0.1)]'
-                        }`}
-                      >
-                        <span>#{sk.name}</span>
-                        <span
-                          className={`text-[9px] px-1.5 py-0.2 rounded-full font-sans ${
-                            isActive ? 'bg-black/30 text-black font-extrabold' : 'bg-[#00ff62]/20 text-[#00ff62]'
+                  {dynamicTrendingSkills.length === 0 ? (
+                    <p className="text-white/30 text-[11px] font-mono italic">
+                      Skills will appear here once members start posting.
+                    </p>
+                  ) : (
+                    dynamicTrendingSkills.map((sk, skIdx) => {
+                      const isActive = search.toLowerCase() === sk.name.toLowerCase();
+                      return (
+                        <button
+                          key={`trend-${sk.name}-${skIdx}`}
+                          onClick={() => {
+                            if (isActive) {
+                              setSearch('');
+                              fetchData('');
+                            } else {
+                              setSearch(sk.name);
+                              fetchData(sk.name);
+                            }
+                          }}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-mono font-extrabold transition cursor-pointer flex items-center gap-1.5 border ${
+                            isActive
+                              ? 'bg-[#00ff62] text-black border-[#00ff62] shadow-[0_0_15px_rgba(0,255,98,0.4)] scale-105'
+                              : 'bg-[#00ff62]/10 hover:bg-[#00ff62]/20 text-[#00ff62] border-[#00ff62]/30 hover:border-[#00ff62]/60 shadow-[0_0_10px_rgba(0,255,98,0.1)]'
                           }`}
                         >
-                          {sk.count}
-                        </span>
-                      </button>
-                    );
-                  })}
+                          <span>#{sk.name}</span>
+                          <span
+                            className={`text-[9px] px-1.5 py-0.2 rounded-full font-sans ${
+                              isActive ? 'bg-black/30 text-black font-extrabold' : 'bg-[#00ff62]/20 text-[#00ff62]'
+                            }`}
+                          >
+                            {sk.count}
+                          </span>
+                        </button>
+                      );
+                    })
+                  )}
                 </div>
               </div>
 
