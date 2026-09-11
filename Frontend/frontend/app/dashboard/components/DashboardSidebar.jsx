@@ -9,7 +9,7 @@ import {
   RiLogoutBoxRLine,
   RiAddLine,
 } from 'react-icons/ri';
-import { FaBolt } from 'react-icons/fa';
+
 import BorderGlow from '../../components/BorderGlow';
 
 const navItems = [
@@ -29,8 +29,8 @@ export default function DashboardSidebar({ activeTab, setActiveTab, user, onLogo
       {/* Brand Header */}
       <div className="px-6 py-5 border-b border-white/[0.06]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#00ff62] to-emerald-600 flex items-center justify-center shadow-[0_0_20px_rgba(0,255,98,0.4)]">
-            <FaBolt className="text-black font-black text-xl" />
+          <div className="w-10 h-10 rounded-2xl bg-[#00ff62] flex items-center justify-center shadow-[0_0_25px_rgba(0,255,98,0.5)]">
+            <span className="rotate-90 text-black text-xl font-black">S</span>
           </div>
           <div>
             <p className="text-white font-black text-lg tracking-tight">SkillSwap</p>

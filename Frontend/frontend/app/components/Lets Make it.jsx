@@ -64,7 +64,7 @@ const LetsMakeit = () => {
         />
         <button 
           onClick={handleGetStarted}
-          className="rounded-full w-70 h-20  box-content shadow-2xl text-white   mt-10 z-[100] bg-green-600 animate-bounce cursor-pointer hover:w-80 hover:animate-none font-bold text-xl flex items-center justify-center active:scale-95 transition-all"
+          className="rounded-full w-70 h-20 box-content shadow-2xl text-white mt-10 z-[100] bg-green-600 cursor-pointer hover:scale-105 hover:shadow-green-500/50 font-bold text-xl flex items-center justify-center active:scale-95 transition-all duration-300"
         >
           Get Started
         </button>
