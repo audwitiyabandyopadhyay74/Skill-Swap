@@ -8,29 +8,42 @@ const callGemini = async (prompt) => {
     throw new Error('Gemini API key is not configured in Backend environment.');
   }
 
-  // Try gemini-2.0-flash then gemini-1.5-flash
-  const models = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+  const models = [
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+    'gemini-1.5-flash-latest',
+    'gemini-1.5-pro-latest',
+    'gemini-1.5-pro',
+    'gemini-pro',
+  ];
+
+  const versions = ['v1beta', 'v1'];
   let lastError = null;
 
-  for (const model of models) {
-    try {
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-        }),
-      });
+  for (const version of versions) {
+    for (const model of models) {
+      try {
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }] }],
+            }),
+          }
+        );
 
-      const data = await res.json();
-      if (res.ok && data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
-        return data.candidates[0].content.parts[0].text;
+        const data = await res.json();
+        if (res.ok && data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+          return data.candidates[0].content.parts[0].text;
+        }
+        if (data.error && data.error.message) {
+          lastError = new Error(data.error.message);
+        }
+      } catch (err) {
+        lastError = err;
       }
-      if (data.error) {
-        lastError = new Error(data.error.message || 'Gemini API call failed');
-      }
-    } catch (err) {
-      lastError = err;
     }
   }
 
@@ -116,3 +129,38 @@ Return ONLY raw JSON without markdown tags.`;
     return res.status(500).json({ message: err.message || 'AI roadmap generation failed' });
   }
 };
+
+export const generateSwapIdeas = async (req, res) => {
+  try {
+    const { userSkills, interests } = req.body;
+    const prompt = `You are the master SkillSwap Gemini AI Co-Pilot.
+A user has skills in: "${userSkills || 'general technology and creative arts'}"
+and interests in: "${interests || 'new skills, languages, or hobbies'}".
+
+Generate 3 creative, high-value peer-to-peer skill swap ideas.
+Format your response in structured JSON with:
+1. "ideas": An array of 3 objects, each containing:
+   - "title": Catchy title for the exchange
+   - "offering": What they teach
+   - "learning": What they learn in return
+   - "icebreaker": A fun discussion question for their first 1-on-1 meeting
+   - "whyItWorks": 1 sentence explaining why this exchange is beneficial.
+
+Return ONLY raw JSON without markdown formatting.`;
+
+    const rawResult = await callGemini(prompt);
+    let parsed;
+    try {
+      const cleanedJson = rawResult.replace(/```json/g, '').replace(/```/g, '').trim();
+      parsed = JSON.parse(cleanedJson);
+    } catch (e) {
+      parsed = { ideas: [] };
+    }
+
+    return res.json({ ideas: parsed.ideas || [] });
+  } catch (err) {
+    console.error('Gemini swap ideas error:', err);
+    return res.status(500).json({ message: err.message || 'AI swap ideas generation failed' });
+  }
+};
+

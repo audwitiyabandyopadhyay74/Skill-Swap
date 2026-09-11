@@ -1,6 +1,6 @@
 'use client';
 
-const BASE = 'http://localhost:5000/api';
+const BASE = 'https://skill-swap-iz63.onrender.com/api';
 
 const getHeaders = () => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('ss_token') : '';
@@ -86,6 +86,8 @@ export const contactAPI = {
 export const aiAPI = {
   generatePost: (body) => apiFetch('/ai/generate-post', { method: 'POST', body: JSON.stringify(body) }),
   generateRoadmap: (body) => apiFetch('/ai/generate-roadmap', { method: 'POST', body: JSON.stringify(body) }),
+  generateSwapIdeas: (body) => apiFetch('/ai/generate-swap-ideas', { method: 'POST', body: JSON.stringify(body) }),
 };
+
 
 

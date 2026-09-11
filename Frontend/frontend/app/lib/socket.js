@@ -5,7 +5,7 @@ let socket;
 export const getSocket = () => {
   if (typeof window === 'undefined') return null;
   if (!socket) {
-    socket = io('http://localhost:5000', {
+    socket = io('https://skill-swap-iz63.onrender.com', {
       autoConnect: true,
       reconnection: true,
       reconnectionAttempts: 10,
