@@ -9,8 +9,6 @@ const callGemini = async (prompt) => {
     'gemini-2.5-flash',
     'gemini-2.0-flash',
     'gemini-1.5-flash',
-    'gemini-1.5-pro',
-    'gemini-pro',
   ];
 
   let lastError = null;
@@ -156,4 +154,4 @@ Return ONLY raw JSON without markdown formatting.`;
     return res.status(500).json({ message: err.message || 'AI swap ideas generation failed' });
   }
 };
-
+
