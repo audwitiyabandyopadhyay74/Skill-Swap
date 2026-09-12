@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { usersAPI } from '../app/lib/api';
+import { usersAPI } from '../lib/api';
 import {
   RiUser3Line,
   RiStarLine,
