@@ -47,7 +47,7 @@ const SkillListInput = ({ label, skills, setSkills, color }) => {
   );
 };
 
-export default function DashboardProfile({ user, setUser }) {
+export default function DashboardProfile({ user, setUser, onProfileUpdate }) {
   const [name, setName] = useState(user?.name || '');
   const [bio, setBio] = useState(user?.bio || '');
   const [skillsOffered, setSkillsOffered] = useState(user?.skillsOffered || []);
@@ -68,12 +68,14 @@ export default function DashboardProfile({ user, setUser }) {
     setError('');
     try {
       const data = await usersAPI.updateProfile({ name, bio, skillsOffered, skillsWanted });
-      setUser(data.user);
-      localStorage.setItem('ss_user', JSON.stringify(data.user));
+      const updatedUser = data.user || data;
+      if (setUser) setUser(updatedUser);
+      if (onProfileUpdate) onProfileUpdate(updatedUser);
+      localStorage.setItem('ss_user', JSON.stringify(updatedUser));
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Failed to update profile');
     } finally {
       setSaving(false);
     }

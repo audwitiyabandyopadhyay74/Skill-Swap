@@ -1,6 +1,14 @@
 'use client';
 
-const BASE = 'https://skill-swap-iz63.onrender.com/api';
+const getBaseUrl = () => {
+  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
+  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    return 'http://localhost:6000/api';
+  }
+  return 'https://skill-swap-iz63.onrender.com/api';
+};
+
+const BASE = getBaseUrl();
 
 const getHeaders = () => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('ss_token') : '';

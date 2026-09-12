@@ -912,7 +912,15 @@ const normalizeSkill = (s) => {
               </div>
             ) : (
               <div className="space-y-5">
-                {filteredPosts.map((p) => (
+                {(() => {
+                  const uniquePostsMap = new Map();
+                  filteredPosts.forEach((p) => {
+                    if (p && p._id && !uniquePostsMap.has(p._id)) {
+                      uniquePostsMap.set(p._id, p);
+                    }
+                  });
+                  return Array.from(uniquePostsMap.values());
+                })().map((p) => (
                   <PostCard
                     key={p._id}
                     post={p}

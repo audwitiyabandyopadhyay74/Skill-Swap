@@ -69,9 +69,7 @@ const PORT = process.env.PORT || 5000;
 
 async function startServer() {
   const mongoUri =
-    process.env.MONGO_URI ||
-    'mongodb+srv://audwitiyabandyopadhyay74_db_user:JbnFLkcrjWwHNo6s@cluster0.d3izuwv.mongodb.net/skillswap?retryWrites=true&w=majority';
-
+    process.env.MONGO_URI
   try {
     console.log('Connecting to MongoDB Atlas...');
     await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 5000 });
