@@ -3,7 +3,7 @@ import { useRef, useCallback, useState, useEffect } from 'react';
 
 function parseHSL(hslStr) {
   const match = hslStr.match(/([\d.]+)\s*([\d.]+)%?\s*([\d.]+)%?/);
-  if (!match) return { h: 140, s: 100, l: 50 }; // Default neon green hsl if parse fails
+  if (!match) return { h: 140, s: 100, l: 50 }; 
   return { h: parseFloat(match[1]), s: parseFloat(match[2]), l: parseFloat(match[3]) };
 }
 
@@ -66,7 +66,7 @@ const BorderGlow = ({
   children,
   className = '',
   edgeSensitivity = 30,
-  glowColor = '143 100 50', // Default Cyber Emerald HSL
+  glowColor = '143 100 50', 
   backgroundColor = '#12121c',
   borderRadius = 24,
   glowRadius = 35,
@@ -171,7 +171,6 @@ const BorderGlow = ({
           : 'rgba(0,0,0,0.2) 0 4px 20px, rgba(0,255,98,0.05) 0 0 30px',
       }}
     >
-      {/* mesh gradient border */}
       <div
         className="absolute inset-0 rounded-[inherit] -z-[1]"
         style={{
@@ -188,7 +187,6 @@ const BorderGlow = ({
         }}
       />
 
-      {/* mesh gradient fill near edges */}
       <div
         className="absolute inset-0 rounded-[inherit] -z-[1]"
         style={{
@@ -220,7 +218,6 @@ const BorderGlow = ({
         }}
       />
 
-      {/* outer glow */}
       <span
         className="absolute pointer-events-none z-[1] rounded-[inherit]"
         style={{

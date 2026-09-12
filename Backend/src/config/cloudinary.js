@@ -9,14 +9,9 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET || 'secret',
 });
 
-/**
- * Uploads a base64 string or file buffer/URL to Cloudinary.
- * If Cloudinary API credentials are not set or fail, falls back gracefully to returning the dataUrl.
- */
 export const uploadToCloudinary = async (fileDataUri, folder = 'skill-swap') => {
   if (!fileDataUri) return null;
 
-  // Check if Cloudinary credentials are set
   const isCloudinaryConfigured =
     process.env.CLOUDINARY_CLOUD_NAME &&
     process.env.CLOUDINARY_API_KEY &&

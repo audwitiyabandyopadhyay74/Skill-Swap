@@ -32,7 +32,7 @@ const STATUS_COLORS = {
 };
 
 export default function DashboardSessions({ user, onLaunchMeet, onOpenChat }) {
-  const [subTab, setSubTab] = useState('active'); // 'active' or 'history'
+  const [subTab, setSubTab] = useState('active'); 
   const [sessions, setSessions] = useState([]);
   const [myPosts, setMyPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -113,7 +113,6 @@ export default function DashboardSessions({ user, onLaunchMeet, onOpenChat }) {
 
   return (
     <div className="p-4 md:p-8 space-y-6 font-sans pb-36 md:pb-8 max-w-7xl mx-auto">
-      {/* Luxury Header Banner */}
       <BorderGlow
         backgroundColor="#12121c"
         borderRadius={28}
@@ -139,7 +138,6 @@ export default function DashboardSessions({ user, onLaunchMeet, onOpenChat }) {
             </p>
           </div>
 
-          {/* Subtab Switcher */}
           <div className="flex bg-[#0a0a0f] p-1.5 rounded-2xl border border-white/10 relative z-10 self-start md:self-auto shadow-inner">
             <button
               onClick={() => setSubTab('active')}
@@ -178,15 +176,12 @@ export default function DashboardSessions({ user, onLaunchMeet, onOpenChat }) {
         </div>
       </BorderGlow>
 
-      {/* Main Split Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        {/* Left Column: Swap Cards List */}
         <div className="lg:col-span-7 space-y-6">
           {subTab === 'active' ? (
-            /* ACTIVE SWAPS & INCOMING REQUESTS */
+            
             <div className="space-y-6">
-              {/* Incoming Requests Section */}
               {pendingProposalsList.length > 0 && (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between px-1">
@@ -266,7 +261,6 @@ export default function DashboardSessions({ user, onLaunchMeet, onOpenChat }) {
                 </div>
               )}
 
-              {/* Active Confirmed Swaps Section */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between px-1">
                   <h3 className="text-white font-black text-xs uppercase tracking-wider flex items-center gap-2">
@@ -404,7 +398,7 @@ export default function DashboardSessions({ user, onLaunchMeet, onOpenChat }) {
               </div>
             </div>
           ) : (
-            /* PREVIOUS SWAPS & HISTORY VIEW */
+            
             <div className="space-y-4">
               <div className="flex items-center justify-between px-1">
                 <h3 className="text-white font-black text-xs uppercase tracking-wider flex items-center gap-2">
@@ -488,7 +482,6 @@ export default function DashboardSessions({ user, onLaunchMeet, onOpenChat }) {
           )}
         </div>
 
-        {/* Right Column: Resized Compact Session Calendar Widget */}
         <div className="lg:col-span-5 sticky top-6">
           <SessionCalendar
             sessions={sessions}

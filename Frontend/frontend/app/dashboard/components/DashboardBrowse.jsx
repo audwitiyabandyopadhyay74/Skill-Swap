@@ -46,7 +46,6 @@ const CATEGORIES = [
   { id: 'audio', label: 'Audio & Music', icon: FaMusic },
 ];
 
-
 const isCleanSkill = (s) => {
   if (!s || typeof s !== 'string') return false;
   const trimmed = s.trim();
@@ -56,7 +55,6 @@ const isCleanSkill = (s) => {
   }
   return true;
 };
-
 
 const calculateMatchScore = (user, post) => {
   if (!user || !post) return 88;
@@ -177,10 +175,8 @@ const PostCard = ({ post, user, onSendProposal, onOpenChat, onRefresh }) => {
         colors={['#00ff62', '#3b82f6', '#8b5cf6']}
         className="p-6 transition-all duration-300 shadow-[0_15px_35px_rgba(0,0,0,0.4)] relative group overflow-hidden"
       >
-        {/* Background Ambient Glow Accent */}
         <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-[#00ff62]/10 via-indigo-500/5 to-transparent rounded-full blur-2xl pointer-events-none group-hover:bg-[#00ff62]/20 transition duration-500" />
 
-        {/* Share Toast */}
         {shareNotice && (
           <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30 bg-[#00ff62] text-black font-extrabold text-[10px] px-3.5 py-1 rounded-full shadow-[0_0_15px_rgba(0,255,98,0.6)] font-mono flex items-center gap-1.5 animate-bounce">
             <FaCheck /> Link copied!
@@ -188,7 +184,6 @@ const PostCard = ({ post, user, onSendProposal, onOpenChat, onRefresh }) => {
         )}
 
         <div className="space-y-4">
-          {/* Author Header */}
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3.5 min-w-0 flex-1">
               <div className="relative">
@@ -232,14 +227,12 @@ const PostCard = ({ post, user, onSendProposal, onOpenChat, onRefresh }) => {
             </div>
           </div>
 
-          {/* Description */}
           {post.description && (
             <p className="text-white/70 text-xs leading-relaxed line-clamp-3 bg-black/40 p-3.5 rounded-2xl border border-white/[0.05]">
               {post.description}
             </p>
           )}
 
-          {/* Visual Skill Exchange Connector */}
           <div className="bg-gradient-to-r from-black/70 via-[#161622] to-black/70 p-4 rounded-2xl border border-white/[0.08] flex items-center justify-between gap-3 shadow-inner">
             <div className="flex-1 min-w-0 space-y-1">
               <span className="text-white/40 text-[9px] font-mono font-black uppercase tracking-wider flex items-center gap-1">
@@ -264,7 +257,6 @@ const PostCard = ({ post, user, onSendProposal, onOpenChat, onRefresh }) => {
             </div>
           </div>
 
-          {/* Social Interaction Toolbar */}
           <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-white/[0.06]">
             <div className="flex items-center gap-2">
               <button
@@ -337,7 +329,6 @@ const PostCard = ({ post, user, onSendProposal, onOpenChat, onRefresh }) => {
             </div>
           </div>
 
-          {/* Comment Discussion Drawer */}
           {showComments && (
             <div className="mt-2 pt-3 border-t border-white/10 space-y-3">
               <form onSubmit={handleAddComment} className="flex gap-2">
@@ -497,7 +488,6 @@ export default function DashboardBrowse({ user, onCreatePost, onRefresh, onOpenC
   const [showAiRoadmap, setShowAiRoadmap] = useState(false);
   const [aiRoadmapSkill, setAiRoadmapSkill] = useState('');
 
-
   const fetchData = async (q = '') => {
     setLoading(true);
     try {
@@ -610,7 +600,6 @@ const normalizeSkill = (s) => {
     }));
   }, [allPosts, allUsers]);
 
-
   useEffect(() => {
     fetchData(search);
   }, [subTab]);
@@ -648,10 +637,8 @@ const normalizeSkill = (s) => {
     return true;
   });
 
-
   return (
     <div className="p-4 md:p-8 space-y-6 font-sans max-w-7xl mx-auto pb-36 md:pb-8">
-      {/* Luxury Hero Header Banner */}
       <BorderGlow
         backgroundColor="#12121c"
         borderRadius={28}
@@ -692,7 +679,6 @@ const normalizeSkill = (s) => {
           </div>
         </div>
 
-        {/* Live Metrics Bar */}
         <div className="mt-6 pt-4 border-t border-white/[0.06] grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono">
           <div className="flex items-center gap-2 text-white/70">
             <span className="w-2 h-2 rounded-full bg-[#00ff62] animate-ping" />
@@ -713,7 +699,6 @@ const normalizeSkill = (s) => {
         </div>
       </BorderGlow>
 
-      {/* Navigation Subtabs & Search Header */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
         <div className="flex bg-[#0a0a0f] p-1.5 rounded-2xl border border-white/10 self-start shadow-inner">
           <button
@@ -749,7 +734,6 @@ const normalizeSkill = (s) => {
         </div>
       </div>
 
-      {/* Category Filter Pills */}
       {subTab === 'posts' && (
         <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
           {CATEGORIES.map((cat) => {
@@ -774,7 +758,6 @@ const normalizeSkill = (s) => {
         </div>
       )}
 
-      {/* Main Content View: Posts (2-Column) vs Members (Full 3-Column Grid) */}
       {subTab === 'users' ? (
         <div className="space-y-6">
           {loading ? (
@@ -808,7 +791,6 @@ const normalizeSkill = (s) => {
                     className="p-6 shadow-xl flex flex-col justify-between h-full group transition-all duration-300 hover:scale-[1.01]"
                   >
                     <div className="space-y-4">
-                      {/* Avatar Header & Match Badge */}
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-center gap-3.5 min-w-0">
                           <div className="relative">
@@ -831,12 +813,10 @@ const normalizeSkill = (s) => {
                         </span>
                       </div>
 
-                      {/* Bio Section */}
                       <p className="text-white/70 text-xs leading-relaxed line-clamp-2 bg-black/40 p-3 rounded-2xl border border-white/[0.05]">
                         {u.bio || 'Verified member actively sharing expertise on SkillSwap.'}
                       </p>
 
-                      {/* Skills Offered (Emerald) */}
                       <div className="space-y-1.5">
                         <p className="text-[10px] text-white/40 uppercase font-mono font-black flex items-center gap-1">
                           <FaLightbulb className="text-[#00ff62]" /> Skills Offered
@@ -857,7 +837,6 @@ const normalizeSkill = (s) => {
                         </div>
                       </div>
 
-                      {/* Skills Wanted (Indigo) */}
                       {validSkillsWanted.length > 0 && (
                         <div className="space-y-1.5">
                           <p className="text-[10px] text-white/40 uppercase font-mono font-black flex items-center gap-1">
@@ -877,7 +856,6 @@ const normalizeSkill = (s) => {
                       )}
                     </div>
 
-                    {/* Footer Actions */}
                     <div className="pt-4 mt-4 border-t border-white/[0.06] flex items-center justify-between gap-2">
                       <button
                         onClick={() => handleToggleFollowUser(u._id)}
@@ -905,9 +883,8 @@ const normalizeSkill = (s) => {
           )}
         </div>
       ) : (
-        /* 2-Column Split System: Feed Cards (Left) vs Trending Sidebar (Right) */
+        
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Left Column (8/12 width): Post Feed */}
           <div className="lg:col-span-8 space-y-5">
             {loading ? (
               <div className="space-y-5">
@@ -943,9 +920,7 @@ const normalizeSkill = (s) => {
             )}
           </div>
 
-          {/* Right Column (4/12 width): Sticky Trending Skills & Guidelines Sidebar */}
           <div className="lg:col-span-4 space-y-5 sticky top-6">
-            {/* Trending Skills Widget */}
             <BorderGlow
               backgroundColor="#12121c"
               borderRadius={24}
@@ -1021,7 +996,6 @@ const normalizeSkill = (s) => {
 
             </BorderGlow>
 
-            {/* Quick Swap Rules Card */}
             <BorderGlow
               backgroundColor="#12121c"
               borderRadius={24}
@@ -1078,4 +1052,4 @@ const normalizeSkill = (s) => {
     </div>
   );
 }
-
+

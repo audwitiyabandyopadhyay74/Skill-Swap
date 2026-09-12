@@ -27,7 +27,6 @@ import {
   FaTrash,
 } from 'react-icons/fa';
 
-
 const EMOJI_LIST = ['👏', '❤️', '🔥', '🎉', '👍', '💡', '🚀', '⭐'];
 
 export default function VideoMeetModal({ session, user, onClose, onRefreshSessions }) {
@@ -37,7 +36,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
   const [isNoiseCancelled, setIsNoiseCancelled] = useState(true);
   const [isCaptionsEnabled, setIsCaptionsEnabled] = useState(false);
 
-  // Audio & Video Input Devices State
   const [audioDevices, setAudioDevices] = useState([]);
   const [videoDevices, setVideoDevices] = useState([]);
   const [selectedAudioId, setSelectedAudioId] = useState('');
@@ -45,8 +43,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
   const [showDeviceSettings, setShowDeviceSettings] = useState(false);
   const [showHostPanel, setShowHostPanel] = useState(false);
 
-
-  // Collaborative Whiteboard State
   const [showWhiteboard, setShowWhiteboard] = useState(false);
   const [drawColor, setDrawColor] = useState('#00ff62');
   const [drawLineWidth, setDrawLineWidth] = useState(3);
@@ -56,8 +52,7 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
 
   const [messages, setMessages] = useState(session.messages || []);
   const [textInput, setTextInput] = useState('');
-  const [activeTab, setActiveTab] = useState('meet'); // 'meet', 'chat', 'participants'
-
+  const [activeTab, setActiveTab] = useState('meet'); 
 
   const [isCallConnected, setIsCallConnected] = useState(false);
   const [captions, setCaptions] = useState([]);
@@ -68,7 +63,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
   const peerConnectionRef = useRef(null);
   const localStreamRef = useRef(null);
   const recognitionRef = useRef(null);
-
 
   const isHost = session.helper?._id === user?._id || session.requester?._id === user?._id;
   const isHelper = session.helper?._id === user?._id;
@@ -82,12 +76,10 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
     (isHelper && session.requesterCompleted) || (!isHelper && session.helperCompleted)
   );
 
-  // Initialize High-Quality Camera & Audio with Device Enumeration
   useEffect(() => {
     const socket = getSocket();
     const iceCandidatesQueue = [];
 
-    // WebRTC PeerConnection with Google STUN servers
     const peerConnection = new RTCPeerConnection({
       iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
@@ -136,7 +128,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
         }
         stream.getTracks().forEach((track) => peerConnection.addTrack(track, stream));
 
-        // Enumerate Input Devices (Microphones & Cameras)
         const devices = await navigator.mediaDevices.enumerateDevices();
         const audios = devices.filter((d) => d.kind === 'audioinput');
         const videos = devices.filter((d) => d.kind === 'videoinput');
@@ -148,7 +139,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
         if (currentAudioTrack) setSelectedAudioId(currentAudioTrack.getSettings().deviceId || audios[0]?.deviceId || '');
         if (currentVideoTrack) setSelectedVideoId(currentVideoTrack.getSettings().deviceId || videos[0]?.deviceId || '');
 
-        // Join room after attaching local media
         socket.emit('join-room', { roomId, userId: user?._id, userName: user?.name });
       } catch (err) {
         console.log('Media init notice:', err.message);
@@ -157,7 +147,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
     }
     initMedia();
 
-    // Socket listeners for WebRTC signaling
     const createAndSendOffer = async () => {
       try {
         const offer = await peerConnection.createOffer({
@@ -230,9 +219,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
       }
     });
 
-
-
-    // Real-time Chat, Captions, Emoji Reactions & Host Controls
     socket.on('receive-message', (msgData) => {
       setMessages((prev) => [...prev, msgData]);
     });
@@ -319,7 +305,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
       socket.off('meeting-completed');
       socket.off('call-ended');
 
-
       if (localStreamRef.current) {
         localStreamRef.current.getTracks().forEach((track) => track.stop());
       }
@@ -333,7 +318,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
     };
   }, [roomId, user?._id, user?.name, isHelper, session.helperCompleted, session.requesterCompleted]);
 
-  // Audio Device Switcher
   const changeAudioDevice = async (deviceId) => {
     setSelectedAudioId(deviceId);
     try {
@@ -363,7 +347,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
     }
   };
 
-  // Video Device Switcher
   const changeVideoDevice = async (deviceId) => {
     setSelectedVideoId(deviceId);
     try {
@@ -393,7 +376,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
     }
   };
 
-  // Collaborative Whiteboard Drawing Handlers
   const startDrawing = (e) => {
     if (!canvasRef.current) return;
     const rect = canvasRef.current.getBoundingClientRect();
@@ -402,7 +384,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
     setIsDrawing(true);
     prevCoordsRef.current = { x, y };
   };
-
 
   const draw = (e) => {
     if (!isDrawing || !canvasRef.current) return;
@@ -452,9 +433,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
     socket.emit('clear-whiteboard', { roomId });
   };
 
-
-
-  // Live Speech Recognition Captions
   const toggleCaptions = () => {
     if (!isCaptionsEnabled) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -537,7 +515,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
           if (sender) sender.replaceTrack(screenTrack);
         }
 
-        // Keep local camera stream active in localVideoRef PiP
         if (localVideoRef.current && localStreamRef.current) {
           localVideoRef.current.srcObject = localStreamRef.current;
         }
@@ -565,7 +542,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
       setIsScreenSharing(false);
     }
   };
-
 
   const handleRemoteMute = (targetUserId) => {
     const socket = getSocket();
@@ -609,7 +585,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
 
   return (
     <div className="fixed inset-0 bg-black/95 backdrop-blur-2xl z-[100] flex flex-col font-sans text-white selection:bg-[#00ff62] selection:text-black">
-      {/* Device Settings Modal */}
       {showDeviceSettings && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-xl z-[120] flex items-center justify-center p-4 font-sans animate-in fade-in duration-200">
           <BorderGlow
@@ -683,7 +658,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
         </div>
       )}
 
-      {/* Google Meet Style Header */}
       <div className="h-16 px-6 bg-[#101010] border-b border-white/10 flex items-center justify-between flex-shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-3.5 h-3.5 rounded-full bg-[#00ff62] animate-ping" />
@@ -698,7 +672,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
           </div>
         </div>
 
-        {/* Tab & Action controls */}
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowWhiteboard(!showWhiteboard)}
@@ -709,7 +682,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
           >
             <FaPaintBrush /> <span className="hidden sm:inline">Whiteboard</span>
           </button>
-
 
           <button
             onClick={() => setActiveTab(activeTab === 'chat' ? 'meet' : 'chat')}
@@ -750,11 +722,8 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
         </div>
       </div>
 
-      {/* Main Video & Sub-Panel Layout */}
       <div className="flex-1 flex overflow-hidden relative">
-        {/* Main Stage */}
         <div className="flex-1 p-4 bg-[#0a0a0a] flex flex-col justify-between relative overflow-hidden">
-          {/* Floating Emoji Reaction Animation Layer */}
           <div className="absolute inset-0 pointer-events-none z-40 overflow-hidden">
             {floatingReactions.map((r) => (
               <div
@@ -772,7 +741,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
             ))}
           </div>
 
-          {/* Remote Video Stream Window */}
           <div className="flex-1 rounded-3xl bg-[#141414] border border-white/10 relative overflow-hidden flex items-center justify-center shadow-2xl">
             <div className="absolute top-4 left-4 z-20 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 flex items-center gap-2">
               <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-xs font-bold">
@@ -786,7 +754,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
               )}
             </div>
 
-            {/* Live Collaborative Whiteboard Canvas */}
             {showWhiteboard && (
               <div className="absolute inset-0 z-35 bg-black/70 backdrop-blur-sm flex flex-col">
                 <div className="absolute top-4 left-1/2 -translate-x-1/2 z-40 bg-black/90 border border-white/20 px-4 py-2 rounded-full flex items-center gap-3 shadow-2xl">
@@ -828,8 +795,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
               </div>
             )}
 
-
-            {/* Dual Completion Banner Notification */}
             {(partnerCompletionMarked || myCompletionMarked) && (
               <div className="absolute top-4 right-4 z-30 bg-black/80 backdrop-blur-md border border-[#00ff62]/30 px-4 py-2 rounded-2xl flex items-center gap-2">
                 <FaCheckCircle className="text-[#00ff62]" />
@@ -864,7 +829,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
               </div>
             )}
 
-            {/* Live Captions Subtitle Overlay */}
             {captions.length > 0 && (
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 max-w-xl w-full px-4 text-center">
                 <div className="bg-black/80 backdrop-blur-md border border-white/20 px-4 py-2.5 rounded-2xl shadow-2xl">
@@ -878,7 +842,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
               </div>
             )}
 
-            {/* Local Video Picture-in-Picture */}
             <div className="absolute bottom-4 right-4 w-44 h-32 rounded-2xl bg-black border-2 border-[#00ff62]/50 overflow-hidden shadow-2xl z-30 flex items-center justify-center">
               <video
                 ref={localVideoRef}
@@ -898,7 +861,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
             </div>
           </div>
 
-          {/* Liquid Glass Refraction Styled Bottom Controls Bar */}
           <div className="mt-4 relative z-30">
             <div className="w-full h-16 px-4 md:px-6 bg-[#141416]/95 backdrop-blur-2xl border border-white/15 rounded-2xl flex items-center justify-between shadow-[0_10px_40px_rgba(0,0,0,0.8)] relative overflow-hidden font-sans before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/10 before:via-transparent before:to-white/5 before:pointer-events-none">
               <div className="flex items-center gap-2 relative z-10">
@@ -907,8 +869,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
                 </span>
               </div>
 
-
-              {/* Core Action Buttons */}
               <div className="flex items-center gap-2 md:gap-3">
                 <button
                   onClick={toggleAudio}
@@ -978,7 +938,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
                   <FaCog className="text-base" />
                 </button>
 
-                {/* Host Controls Panel Toggle */}
                 {isHost && (
                   <button
                     onClick={() => setShowHostPanel(!showHostPanel)}
@@ -994,7 +953,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
                   </button>
                 )}
 
-                {/* Emoji Reactions Palette */}
                 <div className="flex items-center gap-1 bg-white/5 p-1 rounded-full border border-white/10">
                   {EMOJI_LIST.slice(0, 4).map((emoji) => (
                     <button
@@ -1024,7 +982,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
           </div>
         </div>
 
-        {/* Host Controls Floating Modal */}
         {showHostPanel && isHost && (
           <div className="absolute bottom-24 right-8 z-50 bg-[#141416]/95 backdrop-blur-2xl border border-amber-400/40 p-5 rounded-3xl w-80 shadow-[0_10px_40px_rgba(0,0,0,0.8)] space-y-4">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
@@ -1072,10 +1029,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
           </div>
         )}
 
-
-
-
-        {/* Side Panel (Chat / Participants) */}
         {(activeTab === 'chat' || activeTab === 'participants') && (
           <div className="w-full md:w-80 bg-[#121212] border-l border-white/10 flex flex-col font-sans">
             <div className="p-4 border-b border-white/10 flex items-center justify-between">

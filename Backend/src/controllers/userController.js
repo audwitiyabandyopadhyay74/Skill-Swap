@@ -49,6 +49,26 @@ export const getUserById = async (req, res) => {
   }
 };
 
+export const getUserByName = async (req, res) => {
+  try {
+    const slug = decodeURIComponent(req.params.name).toLowerCase();
+    if (isDBConnected()) {
+      const user = await User.findOne({ name: new RegExp(`^${slug}$`, 'i') }).select('-password');
+      if (!user) return res.status(404).json({ message: 'User not found' });
+      return res.json({ user: user.toPublicJSON() });
+    } else {
+      const user = memoryDB.getUsers({}).find(u => u.name?.toLowerCase() === slug);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+      const publicUser = { ...user };
+      delete publicUser.password;
+      return res.json({ user: publicUser });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
 export const updateProfile = async (req, res) => {
   try {
     const { bio, avatar, skillsOffered, skillsWanted, name } = req.body;
@@ -140,7 +160,7 @@ export const toggleFollowUser = async (req, res) => {
         isFollowing = false;
       } else {
         currentUser.connections.push(targetUserId);
-        currentUser.points = (currentUser.points || 100) + 25; // +25 points for making a friend
+        currentUser.points = (currentUser.points || 100) + 25; 
         isFollowing = true;
       }
       await currentUser.save();
@@ -156,5 +176,3 @@ export const toggleFollowUser = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-

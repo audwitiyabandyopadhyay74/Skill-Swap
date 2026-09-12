@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 export function setupSocket(server) {
   const io = new Server(server, {
     cors: {
-      origin: ['http://localhost:3000', 'http://localhost:3001'],
+      origin: ['http://localhost:3000', 'http://localhost:3001, "https://skillswap-dun-tau.vercel.app/'],
       methods: ['GET', 'POST'],
       credentials: true,
     },
@@ -16,20 +16,17 @@ export function setupSocket(server) {
   io.on('connection', (socket) => {
     console.log(`🔌 Client connected to Socket.io: ${socket.id}`);
 
-    // Join Session Room
     socket.on('join-room', ({ roomId, userId, userName }) => {
       socket.join(roomId);
       console.log(`User ${userName} (${userId}) joined room: ${roomId}`);
       socket.to(roomId).emit('user-joined', { userId, userName, socketId: socket.id });
     });
 
-    // Leave Session Room
     socket.on('leave-room', ({ roomId }) => {
       socket.leave(roomId);
       socket.to(roomId).emit('user-left', { socketId: socket.id });
     });
 
-    // Real-Time Chat Message (Text + File Attachments)
     socket.on('send-message', async ({ roomId, senderId, senderName, text, fileData }) => {
       const messageData = {
         _id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
@@ -54,11 +51,9 @@ export function setupSocket(server) {
         console.error('Socket message save notice:', err.message);
       }
 
-      // Broadcast to room
       io.in(roomId).emit('receive-message', messageData);
     });
 
-    // Real-Time Direct Messaging (Personal User Room)
     socket.on('join-user-room', ({ userId }) => {
       if (userId) {
         socket.join(`user_${userId}`);
@@ -87,7 +82,6 @@ export function setupSocket(server) {
         console.error('Direct message socket save notice:', err.message);
       }
 
-      // Emit to sender room and recipient room
       io.in(`user_${senderId}`).emit('receive-direct-message', dmData);
       io.in(`user_${recipientId}`).emit('receive-direct-message', dmData);
     });
@@ -96,7 +90,6 @@ export function setupSocket(server) {
       socket.to(`user_${recipientId}`).emit('partner-typing', { senderId, isTyping });
     });
 
-    // Real-Time Collaborative Notepad & Snippet Sync
     socket.on('sync-notes', async ({ roomId, notes }) => {
       socket.to(roomId).emit('receive-notes-sync', { notes });
       try {
@@ -108,8 +101,6 @@ export function setupSocket(server) {
       }
     });
 
-
-    // WebRTC Video Calling Signaling Events
     socket.on('call-user', ({ roomId, signalData, from, callerName }) => {
       console.log(`Video call initiated in room ${roomId} by ${callerName}`);
       socket.to(roomId).emit('incoming-call', {
@@ -137,7 +128,6 @@ export function setupSocket(server) {
       io.in(roomId).emit('call-ended');
     });
 
-    // Google Meet Features: Live Captions, Reactions & Host Controls
     socket.on('send-caption', ({ roomId, text, senderName }) => {
       socket.to(roomId).emit('receive-caption', { text, senderName, id: Date.now() });
     });
@@ -146,7 +136,6 @@ export function setupSocket(server) {
       io.in(roomId).emit('receive-reaction', { emoji, senderName, id: Date.now() + Math.random() });
     });
 
-    // Real-Time Collaborative Whiteboard Drawing
     socket.on('draw-stroke', ({ roomId, strokeData }) => {
       socket.to(roomId).emit('receive-stroke', { strokeData });
     });

@@ -10,7 +10,6 @@ import GhostFibers from '../components/GhostFibers';
 import { contactAPI } from '../lib/api';
 import { RiMailSendLine, RiMessage3Line, RiCustomerService2Line, RiQuestionAnswerLine, RiCheckLine } from 'react-icons/ri';
 
-
 export default function ContactUsPage() {
   const containerRef = useRef(null);
   const [formData, setFormData] = useState({
@@ -42,7 +41,6 @@ export default function ContactUsPage() {
     );
   }, { scope: containerRef });
 
-
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -51,16 +49,15 @@ export default function ContactUsPage() {
     
     setSubmitting(true);
     try {
-      // 1. Send via Backend API endpoint
+      
       await contactAPI.send(formData);
     } catch (err) {
       console.log('Backend API notice:', err.message);
     } finally {
-      // 2. Also trigger direct mailto dispatch so mail client opens if preferred
+      
       const targetEmail = 'audwitiyabandyopadhyay74@zohomail.in';
       const mailtoUrl = `mailto:${targetEmail}?subject=${encodeURIComponent(`[SkillSwap ${formData.category}] ${formData.subject || 'Contact Inquiry'}`)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\nCategory: ${formData.category}\n\nMessage:\n${formData.message}`)}`;
       
-      // Trigger mailto client
       window.location.href = mailtoUrl;
 
       setSubmitting(false);
@@ -72,12 +69,10 @@ export default function ContactUsPage() {
     }
   };
 
-
   return (
     <div ref={containerRef} className="min-h-screen bg-[#07070b] text-white flex flex-col relative overflow-hidden font-sans">
       <Navbar />
 
-      {/* 3D GhostFibers Background */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-45 overflow-hidden">
         <GhostFibers
           lineColor="#00ff62"
@@ -106,7 +101,6 @@ export default function ContactUsPage() {
         />
       </div>
 
-      {/* Hero Header */}
       <section className="relative pt-36 pb-16 px-6 max-w-6xl mx-auto w-full text-center z-10">
         <span className="gsap-hero text-xs font-mono font-bold uppercase tracking-widest text-[#00ff62] bg-[#00ff62]/10 px-4 py-1.5 rounded-full border border-[#00ff62]/30 mb-6 inline-block">
           Get in Touch
@@ -271,4 +265,3 @@ export default function ContactUsPage() {
     </div>
   );
 }
-

@@ -32,6 +32,7 @@ export const usersAPI = {
     return apiFetch(`/users${qs ? '?' + qs : ''}`);
   },
   getById: (id) => apiFetch(`/users/${id}`),
+  getByName: (name) => apiFetch(`/users/by-name/${encodeURIComponent(name)}`),
   updateProfile: (body) => apiFetch('/users/profile', { method: 'PUT', body: JSON.stringify(body) }),
   dashboard: () => apiFetch('/users/dashboard'),
   toggleFollow: (id) => apiFetch(`/users/${id}/follow`, { method: 'POST' }),
@@ -46,7 +47,6 @@ export const sessionsAPI = {
   sendMessage: (id, text) =>
     apiFetch(`/sessions/${id}/messages`, { method: 'POST', body: JSON.stringify({ text }) }),
 };
-
 
 export const postsAPI = {
   list: (params = {}) => {
@@ -88,6 +88,4 @@ export const aiAPI = {
   generateRoadmap: (body) => apiFetch('/ai/generate-roadmap', { method: 'POST', body: JSON.stringify(body) }),
   generateSwapIdeas: (body) => apiFetch('/ai/generate-swap-ideas', { method: 'POST', body: JSON.stringify(body) }),
 };
-
-
-
+

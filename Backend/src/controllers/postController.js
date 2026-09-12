@@ -52,7 +52,7 @@ export const createPost = async (req, res) => {
         skillWanted,
         description: description || '',
       });
-      // Award +50 Skill Swap Points for creating a post
+      
       const user = await User.findById(req.user._id);
       if (user) {
         user.points = (user.points || 100) + 50;
@@ -77,7 +77,6 @@ export const createPost = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
 
 export const sendProposal = async (req, res) => {
   try {
@@ -238,4 +237,3 @@ export const toggleBookmarkPost = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-

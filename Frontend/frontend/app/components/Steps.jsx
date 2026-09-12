@@ -6,7 +6,6 @@ import { FaRocket, FaPen, FaCommentDots } from 'react-icons/fa';
 const Steps = () => {
   return (
     <div className="w-full bg-[#0a0a0a] min-h-screen relative overflow-hidden text-white">
-      {/* Ambient background glow */}
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-indigo-600/10 blur-[120px] pointer-events-none z-0" />
 
       <ScrollStack
@@ -19,7 +18,6 @@ const Steps = () => {
         rotationAmount={0.2}
         blurAmount={2}
       >
-        {/* Heading */}
         <div className="text-center mb-20 mt-10">
           <h1 className="text-6xl font-bold text-white tracking-tight mb-3">
             Steps to Start
@@ -29,7 +27,6 @@ const Steps = () => {
           </p>
         </div>
 
-        {/* Step 1 */}
         <ScrollStackItem
           itemClassName="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 ring-1 ring-white/10 overflow-hidden h-[450px]"
         >

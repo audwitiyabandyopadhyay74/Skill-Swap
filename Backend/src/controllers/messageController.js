@@ -61,7 +61,6 @@ export const getMessagesWithUser = async (req, res) => {
         .populate('recipient', 'name avatar')
         .sort({ createdAt: 1 });
 
-      // Mark messages as read
       await Message.updateMany(
         { sender: partnerId, recipient: currentUserId, read: false },
         { $set: { read: true } }

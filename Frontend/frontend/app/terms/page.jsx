@@ -61,12 +61,10 @@ export default function TermsPage() {
     );
   }, { scope: containerRef });
 
-
   return (
     <div ref={containerRef} className="min-h-screen bg-[#07070b] text-white flex flex-col relative overflow-hidden font-sans">
       <Navbar />
 
-      {/* Header */}
       <section className="relative pt-36 pb-16 px-6 max-w-4xl mx-auto w-full text-center z-10">
         <span className="gsap-hero text-xs font-mono font-bold uppercase tracking-widest text-[#00ff62] bg-[#00ff62]/10 px-4 py-1.5 rounded-full border border-[#00ff62]/30 mb-6 inline-block">
           Legal Agreement
@@ -77,7 +75,6 @@ export default function TermsPage() {
         <p className="gsap-hero text-white/60 text-sm font-mono">Last Updated: September 10, 2026</p>
       </section>
 
-      {/* Content */}
       <section className="px-6 max-w-4xl mx-auto w-full mb-24 z-10">
         <div className="p-8 md:p-12 rounded-3xl bg-white/5 backdrop-blur-2xl border border-white/10 space-y-8">
           {sections.map((sec) => (
@@ -93,4 +90,3 @@ export default function TermsPage() {
     </div>
   );
 }
-

@@ -3,7 +3,6 @@ import nodemailer from 'nodemailer';
 
 const router = express.Router();
 
-// Transporter configuration (Zoho SMTP server: smtp.zoho.in, Port: 465, Mode: SSL)
 const createTransporter = () => {
   const host = process.env.SMTP_HOST || 'smtp.zoho.in';
   const port = Number(process.env.SMTP_PORT) || 465;
@@ -15,7 +14,7 @@ const createTransporter = () => {
     return nodemailer.createTransport({
       host,
       port,
-      secure, // true for port 465 SSL
+      secure, 
       auth: {
         user,
         pass
@@ -23,16 +22,11 @@ const createTransporter = () => {
     });
   }
 
-  // Fallback transporter logging if SMTP_PASS app password is not configured yet
   return nodemailer.createTransport({
     jsonTransport: true
   });
 };
 
-
-// @route   POST /api/contact
-// @desc    Submit contact form and deliver email
-// @access  Public
 router.post('/', async (req, res) => {
   try {
     const { name, email, category, subject, message } = req.body;

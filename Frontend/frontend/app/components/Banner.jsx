@@ -13,12 +13,11 @@ const Banner = () => {
     { image: "https://res.cloudinary.com/dnr6j10en/image/upload/v1788590152/IMG-20260905-WA0005_mixy6w.jpg", title: "Peaks", href: "https://example.com/one" },
     { image: "https://res.cloudinary.com/dnr6j10en/image/upload/v1788590153/IMG-20260905-WA0003_h7acua.jpg", title: "Pup", href: "https://example.com/two" },
     { image: "https://res.cloudinary.com/dnr6j10en/image/upload/v1788590153/IMG-20260905-WA0004_msrgoa.jpg", title: "Falls", href: "https://example.com/three" },
-    // … keep or repeat items as needed
+    
   ];
 
   return (
     <div className="w-full h-screen relative items-center justify-center overflow-hidden">
-      {/* Background layer with low z-index */}
       <div className="absolute inset-0 z-[0]">
         <DarkVeil
           hueShift={0}
@@ -30,7 +29,6 @@ const Banner = () => {
         />
       </div>
 
-      {/* Foreground section unchanged, just corrected z-index */}
       <div className="w-full h-screen flex items-end justify-center p-12 z-[10]">
 
         <FoldText

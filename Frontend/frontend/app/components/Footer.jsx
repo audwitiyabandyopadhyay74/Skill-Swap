@@ -7,11 +7,9 @@ import { RiRocketLine, RiShieldLine, RiTeamLine, RiMailLine } from 'react-icons/
 const Footer = () => {
   return (
     <footer className="w-full bg-[#050508]/90 backdrop-blur-2xl border-t border-white/10 text-white/70 pt-12 pb-28 md:pb-16 px-6 md:px-16 z-40 relative overflow-hidden">
-      {/* Glow Ambient Blob */}
       <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#00ff62]/10 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-6xl mx-auto space-y-10 relative z-10">
-        {/* Mobile Quick Action Pill Banner */}
         <div className="flex md:hidden items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-[#00ff62]/10 border border-[#00ff62]/30 flex items-center justify-center text-[#00ff62]">
@@ -30,9 +28,7 @@ const Footer = () => {
           </Link>
         </div>
 
-        {/* Core Links Grid - 2 columns on mobile, 4 on desktop */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10">
-          {/* Brand Column (Full width on mobile) */}
           <div className="col-span-2 md:col-span-1 space-y-4">
             <div className="flex items-center gap-3">
               <div className="logo bg-[#00ff62] w-9 h-9 rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(0,255,98,0.4)]">
@@ -45,7 +41,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Product Navigation */}
           <div className="space-y-3">
             <h4 className="text-xs font-mono font-bold uppercase text-[#00ff62] tracking-wider">Product</h4>
             <ul className="space-y-2 text-xs md:text-sm">
@@ -64,7 +59,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Legal Links */}
           <div className="space-y-3">
             <h4 className="text-xs font-mono font-bold uppercase text-[#A78BFA] tracking-wider">Legal</h4>
             <ul className="space-y-2 text-xs md:text-sm">
@@ -80,7 +74,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Community Links */}
           <div className="col-span-2 md:col-span-1 space-y-3">
             <h4 className="text-xs font-mono font-bold uppercase text-[#FF79C6] tracking-wider">Community</h4>
             <div className="flex flex-wrap md:flex-col gap-2 md:gap-2 text-xs md:text-sm">
@@ -97,7 +90,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Footer Bottom Bar */}
         <div className="pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between text-[11px] md:text-xs text-white/40 gap-3 text-center md:text-left">
           <p>© {new Date().getFullYear()} SkillSwap Network Inc. All rights reserved.</p>
           <p className="font-mono text-[#00ff62]/60">Built with WebRTC & Modern WebGL</p>
@@ -108,4 +100,3 @@ const Footer = () => {
 };
 
 export default Footer;
-

@@ -37,8 +37,6 @@ const Page = () => {
     }
   }, [router]);
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !email || !password) {
@@ -65,7 +63,6 @@ const Page = () => {
 
   return (
     <div ref={containerRef} className="w-screen h-screen flex items-center justify-center relative font-sans">
-      {/* Background */}
       <div className="absolute inset-0 z-[-10]">
         <Topography
           lowColor="#5227FF"
@@ -91,9 +88,7 @@ const Page = () => {
         />
       </div>
 
-      {/* Card */}
       <div className="gsap-card w-[90%] sm:w-[80%] md:w-[45%] lg:w-[32%] min-h-[90vh] bg-white/95 backdrop-blur-xl z-10 rounded-3xl gap-4 flex flex-col items-center justify-center text-black shadow-[0_20px_60px_-15px_rgba(82,39,255,0.4)] border border-white/40 px-6 sm:px-8 py-8">
-        {/* Title */}
         <div className="w-full text-center mb-4">
           <h1 className="font-bold font-mono text-3xl tracking-tight">
             Create Account
@@ -104,7 +99,6 @@ const Page = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="inputs w-full flex flex-col items-center justify-center gap-5">
-          {/* Name */}
           <div className="gsap-input relative w-[85%]">
             <input
               required
@@ -123,7 +117,6 @@ const Page = () => {
             </label>
           </div>
 
-          {/* Email */}
           <div className="gsap-input relative w-[85%]">
             <input
               required
@@ -142,7 +135,6 @@ const Page = () => {
             </label>
           </div>
 
-          {/* Password */}
           <div className="gsap-input relative w-[85%]">
             <input
               required
@@ -161,7 +153,6 @@ const Page = () => {
             </label>
           </div>
 
-          {/* Confirm Password */}
           <div className="gsap-input relative w-[85%]">
             <input
               required
@@ -180,7 +171,6 @@ const Page = () => {
             </label>
           </div>
 
-          {/* Sign Up Button */}
           <button
             type="submit"
             disabled={loading}
@@ -189,14 +179,12 @@ const Page = () => {
             {loading ? 'Creating Account...' : 'Sign Up'}
           </button>
 
-          {/* Divider */}
           <div className="flex items-center w-[85%] gap-4 my-1">
             <div className="flex-1 h-[1px] bg-gray-200" />
             <span className="text-gray-300 text-xs font-mono">or</span>
             <div className="flex-1 h-[1px] bg-gray-200" />
           </div>
 
-          {/* Continue with Google */}
           <button
             type="button"
             onClick={() => toast.info('Google Auth integration ready')}
@@ -227,7 +215,6 @@ const Page = () => {
           </button>
         </form>
 
-        {/* Footer */}
         <div className="w-full text-center mt-auto pt-4">
           <span className="text-sm font-mono text-gray-400">
             Already have an account?{' '}
@@ -245,4 +232,3 @@ const Page = () => {
 };
 
 export default Page;
-

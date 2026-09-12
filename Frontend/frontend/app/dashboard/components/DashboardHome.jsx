@@ -64,7 +64,6 @@ export default function DashboardHome({ user, dashData, sessions = [], onNavigat
 
   return (
     <div className="p-4 md:p-8 space-y-8 font-sans pb-36 md:pb-8">
-      {/* Hero Welcome Banner */}
       <div className="bg-gradient-to-r from-[#121217]/90 via-[#181826]/90 to-[#121217]/90 backdrop-blur-2xl border border-white/[0.08] rounded-3xl p-6 md:p-8 relative overflow-hidden shadow-2xl">
         <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-[#00ff62]/10 via-indigo-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
 
@@ -82,7 +81,6 @@ export default function DashboardHome({ user, dashData, sessions = [], onNavigat
         </div>
       </div>
 
-      {/* Grid of Key Statistics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <StatCard label="Skill Points" value={`⚡ ${user?.points || 100}`} color="text-[#00ff62]" icon={<FaStar />} />
         <StatCard label="My Friends" value={user?.connections?.length || 0} color="text-violet-400" icon={<FaLink />} />
@@ -90,8 +88,6 @@ export default function DashboardHome({ user, dashData, sessions = [], onNavigat
         <StatCard label="Rating" value={stats?.rating ? `${stats.rating}` : '4.8'} color="text-amber-400" icon={<FaStar />} />
       </div>
 
-
-      {/* Scheduled Meetings Widget */}
       <div className="bg-[#121217]/90 backdrop-blur-2xl border border-[#00ff62]/30 rounded-3xl p-6 shadow-2xl space-y-4 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-48 h-48 bg-[#00ff62]/5 rounded-full blur-2xl pointer-events-none" />
 
@@ -189,7 +185,6 @@ export default function DashboardHome({ user, dashData, sessions = [], onNavigat
         )}
       </div>
 
-      {/* Active Sessions & Skill Profile Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-[#121217]/90 backdrop-blur-2xl border border-white/[0.08] rounded-3xl p-6 shadow-xl space-y-4">
           <div className="flex items-center justify-between">

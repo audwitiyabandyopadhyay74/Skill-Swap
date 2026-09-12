@@ -4,7 +4,6 @@ import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// POST /api/upload - Upload file/image to Cloudinary
 router.post('/', protect, async (req, res) => {
   try {
     const { fileData, folder = 'skill-swap' } = req.body;

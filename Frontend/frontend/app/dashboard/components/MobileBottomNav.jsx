@@ -3,22 +3,22 @@ import React from 'react';
 import { RiHome5Line, RiSearchLine, RiAddLine, RiHandHeartLine, RiUser3Line, RiChat3Line } from 'react-icons/ri';
 import Dock from '../../components/Dock';
 
-export default function MobileBottomNav({ activeTab, setActiveTab, onCreatePost }) {
+export default function MobileBottomNav({ activeTab, onNavigate, onCreatePost }) {
   const dockItems = [
     {
       icon: <RiHome5Line size={22} className={activeTab === 'home' ? 'text-[#00ff62]' : 'text-white/70'} />,
       label: 'Home',
-      onClick: () => setActiveTab('home'),
+      onClick: () => onNavigate('home'),
     },
     {
       icon: <RiSearchLine size={22} className={activeTab === 'browse' ? 'text-[#00ff62]' : 'text-white/70'} />,
       label: 'Browse',
-      onClick: () => setActiveTab('browse'),
+      onClick: () => onNavigate('browse'),
     },
     {
       icon: <RiChat3Line size={22} className={activeTab === 'messages' ? 'text-[#00ff62]' : 'text-white/70'} />,
       label: 'Messages',
-      onClick: () => setActiveTab('messages'),
+      onClick: () => onNavigate('messages'),
     },
     {
       icon: <RiAddLine size={24} className="text-black font-bold" />,
@@ -29,12 +29,12 @@ export default function MobileBottomNav({ activeTab, setActiveTab, onCreatePost 
     {
       icon: <RiHandHeartLine size={22} className={activeTab === 'sessions' ? 'text-[#00ff62]' : 'text-white/70'} />,
       label: 'Sessions',
-      onClick: () => setActiveTab('sessions'),
+      onClick: () => onNavigate('sessions'),
     },
     {
       icon: <RiUser3Line size={22} className={activeTab === 'profile' ? 'text-[#00ff62]' : 'text-white/70'} />,
       label: 'Profile',
-      onClick: () => setActiveTab('profile'),
+      onClick: () => onNavigate('profile'),
     },
   ];
 

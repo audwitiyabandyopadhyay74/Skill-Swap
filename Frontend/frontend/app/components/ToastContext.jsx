@@ -2,7 +2,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { FaCheck, FaExclamationTriangle, FaInfoCircle, FaTimes } from 'react-icons/fa';
 
-
 const ToastContext = createContext(null);
 
 export function ToastProvider({ children }) {
@@ -29,7 +28,6 @@ export function ToastProvider({ children }) {
   return (
     <ToastContext.Provider value={toast}>
       {children}
-      {/* Toast Notification Floating Container */}
       <div className="fixed top-5 right-5 z-[9999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none font-sans">
         {toasts.map((t) => (
           <div
@@ -64,7 +62,7 @@ export function ToastProvider({ children }) {
 export function useToast() {
   const context = useContext(ToastContext);
   if (!context) {
-    // Fallback if context not mounted yet
+    
     return {
       success: (m) => console.log('Toast:', m),
       error: (m) => console.log('Toast Error:', m),

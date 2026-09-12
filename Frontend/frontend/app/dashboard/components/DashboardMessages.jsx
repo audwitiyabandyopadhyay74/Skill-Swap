@@ -29,7 +29,7 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [searchMember, setSearchMember] = useState('');
   const [memberResults, setMemberResults] = useState([]);
-  const [activeTab, setActiveTab] = useState('chat'); // 'chat' or 'canvas'
+  const [activeTab, setActiveTab] = useState('chat'); 
   const [collaborativeNotes, setCollaborativeNotes] = useState('');
   const [typingUser, setTypingUser] = useState(null);
 
@@ -113,7 +113,6 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
     scrollToBottom();
   }, [messages]);
 
-  // Real-Time Socket Setup
   useEffect(() => {
     if (!user?._id) return;
     const socket = getSocket();
@@ -148,7 +147,6 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
     };
   }, [user?._id, activeConversation]);
 
-  // Handle Search Members
   useEffect(() => {
     if (!searchMember.trim()) {
       setMemberResults([]);
@@ -266,9 +264,7 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
     <div className="p-4 md:p-8 font-sans h-[calc(100vh-80px)] flex flex-col">
       <div className="bg-[#121217]/90 backdrop-blur-2xl border border-white/[0.08] rounded-3xl flex-1 flex flex-col md:flex-row overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative">
         
-        {/* Left Conversation Threads Sidebar */}
         <div className="w-full md:w-80 bg-[#0c0c10]/95 border-r border-white/[0.08] flex flex-col flex-shrink-0">
-          {/* Header & Search */}
           <div className="p-4 border-b border-white/[0.08] space-y-3">
             <div className="flex items-center justify-between">
               <h2 className="text-white font-black text-lg tracking-tight flex items-center gap-2">
@@ -290,7 +286,6 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
               />
             </div>
 
-            {/* Search Dropdown Results */}
             {memberResults.length > 0 && (
               <div className="bg-[#181824] border border-white/15 rounded-xl p-2 max-h-48 overflow-y-auto space-y-1 shadow-2xl">
                 <p className="text-[10px] text-white/40 uppercase font-mono font-bold px-2 py-1">Member Search Results</p>
@@ -313,7 +308,6 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
             )}
           </div>
 
-          {/* Conversation List */}
           <div className="flex-1 overflow-y-auto p-2 space-y-1">
             {loadingConvos ? (
               <div className="space-y-2 p-2">
@@ -381,10 +375,8 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
           </div>
         </div>
 
-        {/* Right Active Conversation Chat Workspace */}
         {activeConversation ? (
           <div className="flex-1 flex flex-col bg-[#101014]/80">
-            {/* Active Thread Header */}
             <div className="p-4 border-b border-white/[0.08] bg-[#14141a]/90 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="relative">
@@ -412,7 +404,6 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
                 </div>
               </div>
 
-              {/* Subtab Toggle (Chat vs Collaborative Canvas) */}
               <div className="flex bg-black/40 p-1 rounded-xl border border-white/10">
                 <button
                   onClick={() => setActiveTab('chat')}
@@ -433,10 +424,8 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
               </div>
             </div>
 
-            {/* Workspace View */}
             {activeTab === 'chat' ? (
               <>
-                {/* Chat Messages Feed */}
                 <div className="flex-1 p-4 md:p-6 overflow-y-auto space-y-3">
                   {loadingMessages ? (
                     <div className="flex items-center justify-center h-full text-white/30 font-mono text-xs">
@@ -508,7 +497,6 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
                   <div ref={messagesEndRef} />
                 </div>
 
-                {/* Message Input Box */}
                 <form onSubmit={handleSendMessage} className="p-4 border-t border-white/[0.08] bg-[#14141a]/90 flex items-center gap-2">
                   <label className="p-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white/60 hover:text-[#00ff62] rounded-xl cursor-pointer transition">
                     <FaPaperclip />
@@ -532,7 +520,7 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
                 </form>
               </>
             ) : (
-              /* Collaborative Shared Workspace Canvas */
+              
               <div className="flex-1 p-6 flex flex-col gap-4">
                 <div className="flex items-center justify-between">
                   <div>

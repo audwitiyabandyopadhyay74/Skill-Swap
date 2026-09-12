@@ -7,7 +7,6 @@ export default function WhyUs() {
 
   return (
     <div className="w-full min-h-screen py-20 px-6 flex flex-col items-center justify-center relative overflow-hidden bg-[#0a0a0f] text-white">
-      {/* Title */}
       <div className="text-center mb-12 z-10">
         <h2 className="text-4xl md:text-6xl font-black tracking-tight text-white">
           Why Choose <span className="text-[#FF79C6]">SkillSwap</span>
@@ -17,7 +16,6 @@ export default function WhyUs() {
         </p>
       </div>
 
-      {/* LaserFlow Interactive Container */}
       <div
         className="w-full max-w-5xl h-[500px] md:h-[600px] relative rounded-3xl overflow-hidden border border-[#FF79C6]/30 shadow-2xl bg-[#0e0c15]"
         onMouseMove={(e) => {
@@ -48,7 +46,6 @@ export default function WhyUs() {
           mouseTiltStrength={0.015}
         />
 
-        {/* Floating Content Card over LaserFlow */}
         <div className="absolute inset-x-6 top-[20%] md:top-[25%] max-w-3xl mx-auto bg-black/60 backdrop-blur-xl border border-[#FF79C6]/40 p-8 rounded-3xl z-10 text-center shadow-2xl space-y-4">
           <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#FF79C6] bg-[#FF79C6]/10 px-3 py-1 rounded-full border border-[#FF79C6]/30">
             Interactive Skill Network

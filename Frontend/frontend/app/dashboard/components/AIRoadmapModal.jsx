@@ -20,20 +20,17 @@ import { useToast } from '../../components/ToastContext';
 
 export default function AIRoadmapModal({ initialSkill = '', onClose, onApplyPost }) {
   const toast = useToast();
-  const [activeTab, setActiveTab] = useState('roadmap'); // 'roadmap', 'ideas', 'pitch'
+  const [activeTab, setActiveTab] = useState('roadmap'); 
 
-  // Tab 1: Roadmap State
   const [roadmapSkill, setRoadmapSkill] = useState(initialSkill || '');
   const [roadmapLoading, setRoadmapLoading] = useState(false);
   const [roadmapData, setRoadmapData] = useState(null);
 
-  // Tab 2: Ideas State
   const [mySkills, setMySkills] = useState('');
   const [wantSkills, setWantSkills] = useState('');
   const [ideasLoading, setIdeasLoading] = useState(false);
   const [ideasData, setIdeasData] = useState([]);
 
-  // Tab 3: Pitch State
   const [pitchTopic, setPitchTopic] = useState('');
   const [pitchOffered, setPitchOffered] = useState('');
   const [pitchNeeded, setPitchNeeded] = useState('');
@@ -41,7 +38,6 @@ export default function AIRoadmapModal({ initialSkill = '', onClose, onApplyPost
   const [pitchResult, setPitchResult] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  // Preset Chips
   const QUICK_SKILLS = [
     'Python & AI',
     'UI/UX & Figma',
@@ -51,7 +47,6 @@ export default function AIRoadmapModal({ initialSkill = '', onClose, onApplyPost
     'Public Speaking',
   ];
 
-  // Handlers
   const handleGenerateRoadmap = async (e) => {
     e?.preventDefault();
     if (!roadmapSkill.trim()) {
@@ -138,12 +133,10 @@ export default function AIRoadmapModal({ initialSkill = '', onClose, onApplyPost
         colors={['#00ff62', '#8b5cf6', '#3b82f6', '#ec4899']}
         className="w-full max-w-3xl max-h-[92vh] shadow-[0_40px_90px_rgba(0,0,0,0.95)] relative overflow-hidden flex flex-col"
       >
-        {/* Ambient Top Radial Glow */}
         <div className="absolute -top-20 -left-20 w-80 h-80 bg-purple-600/15 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-[#00ff62]/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="p-5 md:p-8 space-y-6 relative z-10 overflow-y-auto max-h-[88vh] custom-scrollbar">
-          {/* Top Header */}
           <div className="flex items-start justify-between pb-4 border-b border-white/[0.08]">
             <div className="space-y-1.5">
               <div className="flex items-center gap-2">
@@ -168,7 +161,6 @@ export default function AIRoadmapModal({ initialSkill = '', onClose, onApplyPost
             </button>
           </div>
 
-          {/* Luxury Tab Switcher */}
           <div className="grid grid-cols-3 bg-[#08080f] p-1.5 rounded-2xl border border-white/[0.08] gap-1 shadow-inner">
             <button
               onClick={() => setActiveTab('roadmap')}
@@ -207,7 +199,6 @@ export default function AIRoadmapModal({ initialSkill = '', onClose, onApplyPost
             </button>
           </div>
 
-          {/* TAB 1: LEARNING ROADMAP */}
           {activeTab === 'roadmap' && (
             <div className="space-y-6 animate-in fade-in duration-200">
               <form onSubmit={handleGenerateRoadmap} className="space-y-4">
@@ -233,7 +224,6 @@ export default function AIRoadmapModal({ initialSkill = '', onClose, onApplyPost
                   </div>
                 </div>
 
-                {/* Preset Chips */}
                 <div className="flex flex-wrap items-center gap-2 pt-1">
                   <span className="text-[10px] text-white/40 font-mono font-bold">Try quick topic:</span>
                   {QUICK_SKILLS.map((qs) => (
@@ -252,7 +242,6 @@ export default function AIRoadmapModal({ initialSkill = '', onClose, onApplyPost
                 </div>
               </form>
 
-              {/* Roadmap Result */}
               {roadmapData && (
                 <div className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-300 pt-2 border-t border-white/[0.08]">
                   <div className="bg-gradient-to-br from-purple-950/40 via-[#12121e] to-black/60 p-5 rounded-2xl border border-purple-500/20 space-y-2 shadow-xl">
@@ -311,7 +300,6 @@ export default function AIRoadmapModal({ initialSkill = '', onClose, onApplyPost
             </div>
           )}
 
-          {/* TAB 2: SWAP IDEA MATCHER */}
           {activeTab === 'ideas' && (
             <div className="space-y-6 animate-in fade-in duration-200">
               <form onSubmit={handleGenerateIdeas} className="space-y-4">
@@ -352,7 +340,6 @@ export default function AIRoadmapModal({ initialSkill = '', onClose, onApplyPost
                 </button>
               </form>
 
-              {/* Ideas Result */}
               {ideasData.length > 0 && (
                 <div className="space-y-4 pt-2 border-t border-white/[0.08]">
                   <h4 className="text-white font-black text-sm uppercase tracking-wider flex items-center gap-2">
@@ -399,7 +386,6 @@ export default function AIRoadmapModal({ initialSkill = '', onClose, onApplyPost
             </div>
           )}
 
-          {/* TAB 3: PITCH CRAFTER */}
           {activeTab === 'pitch' && (
             <div className="space-y-6 animate-in fade-in duration-200">
               <form onSubmit={handleGeneratePitch} className="space-y-4">
@@ -452,7 +438,6 @@ export default function AIRoadmapModal({ initialSkill = '', onClose, onApplyPost
                 </button>
               </form>
 
-              {/* Pitch Result */}
               {pitchResult && (
                 <div className="space-y-4 pt-2 border-t border-white/[0.08] animate-in fade-in duration-300">
                   <div className="bg-[#12121c] p-6 rounded-3xl border border-pink-500/30 space-y-4 shadow-xl relative overflow-hidden">

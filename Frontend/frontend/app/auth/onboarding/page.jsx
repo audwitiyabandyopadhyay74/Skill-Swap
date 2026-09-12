@@ -39,7 +39,6 @@ export default function OnboardingPage() {
     );
   }, { scope: containerRef });
 
-
   useEffect(() => {
     const token = localStorage.getItem('ss_token');
     const storedUser = localStorage.getItem('ss_user');
@@ -105,7 +104,6 @@ export default function OnboardingPage() {
 
   return (
     <div ref={containerRef} className="w-screen h-screen flex items-center justify-center relative overflow-hidden font-sans">
-      {/* Dynamic Background */}
       <div className="absolute inset-0 z-[-10]">
         <Topography
           lowColor="#5227FF"
@@ -150,7 +148,6 @@ export default function OnboardingPage() {
           backButtonText="Back"
           nextButtonText="Continue"
         >
-          {/* Step 1: Skills Offered */}
           <Step>
             <div className="space-y-4 px-2">
               <div>
@@ -195,7 +192,6 @@ export default function OnboardingPage() {
             </div>
           </Step>
 
-          {/* Step 2: Skills Wanted */}
           <Step>
             <div className="space-y-4 px-2">
               <div>
@@ -240,7 +236,6 @@ export default function OnboardingPage() {
             </div>
           </Step>
 
-          {/* Step 3: Bio */}
           <Step>
             <div className="space-y-4 px-2">
               <div>
@@ -258,7 +253,6 @@ export default function OnboardingPage() {
             </div>
           </Step>
 
-          {/* Step 4: Final Confirmation */}
           <Step>
             <div className="text-center py-4 space-y-3 px-10">
               <div className="w-14 h-14 rounded-full bg-[#00ff62]/20 border border-[#00ff62] flex items-center justify-center mx-auto text-[#00ff62] font-black text-2xl animate-bounce">
@@ -275,4 +269,3 @@ export default function OnboardingPage() {
     </div>
   );
 }
-

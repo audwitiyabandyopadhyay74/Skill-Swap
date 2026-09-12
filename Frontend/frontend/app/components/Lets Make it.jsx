@@ -25,7 +25,6 @@ const LetsMakeit = () => {
 
   return (
     <div className="w-full h-screen relative items-center justify-center overflow-hidden">
-      {/* Background layer with low z-index */}
       <div className="absolute inset-0 z-[0]">
         <GradientBlinds
     gradientColors={['#FF9FFC', '#5227FF']}
@@ -45,7 +44,6 @@ const LetsMakeit = () => {
         />
       </div>
 
-      {/* Foreground section unchanged, just corrected z-index */}
       <div className="w-full h-screen flex-col flex items-center justify-center p-12 z-[10] gap-14">
 
         <FoldText
@@ -69,7 +67,6 @@ const LetsMakeit = () => {
           Get Started
         </button>
 
-       
       </div>
     </div>
   );

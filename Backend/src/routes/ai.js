@@ -9,4 +9,4 @@ router.post('/generate-roadmap', protect, generateRoadmap);
 router.post('/generate-swap-ideas', protect, generateSwapIdeas);
 
 export default router;
-
+

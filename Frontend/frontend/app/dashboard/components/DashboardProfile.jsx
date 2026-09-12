@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { usersAPI } from '../../lib/api';
 import { FaTimes, FaCheck } from 'react-icons/fa';
 
-
 import SkillInputAuto from '../../components/SkillInput';
 
 const SkillListInput = ({ label, skills, setSkills, color }) => {
@@ -110,7 +109,6 @@ export default function DashboardProfile({ user, setUser }) {
         </div>
       </div>
 
-      {/* Gamified Achievements & Points System */}
       <div className="mb-8 p-5 bg-[#141414] border border-white/[0.07] rounded-2xl space-y-3">
         <div className="flex items-center justify-between">
           <h3 className="text-white font-black text-xs uppercase tracking-wider flex items-center gap-2">

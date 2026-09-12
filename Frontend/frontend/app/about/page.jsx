@@ -66,12 +66,10 @@ export default function AboutPage() {
     );
   }, { scope: containerRef });
 
-
   return (
     <div ref={containerRef} className="min-h-screen bg-[#07070b] text-white flex flex-col relative overflow-hidden font-sans">
       <Navbar />
 
-      {/* 3D MoltenMetal Background */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-40 overflow-hidden">
         <MoltenMetal
           color1="#00ff62"
@@ -95,7 +93,6 @@ export default function AboutPage() {
         />
       </div>
 
-      {/* Hero Header */}
       <section className="relative pt-36 pb-20 px-6 max-w-6xl mx-auto w-full text-center z-10">
         <span className="gsap-hero text-xs font-mono font-bold uppercase tracking-widest text-[#00ff62] bg-[#00ff62]/10 px-4 py-1.5 rounded-full border border-[#00ff62]/30 mb-6 inline-block">
           About SkillSwap
@@ -111,7 +108,6 @@ export default function AboutPage() {
         </p>
       </section>
 
-      {/* Stats Grid */}
       <section className="px-6 max-w-6xl mx-auto w-full mb-20 z-10">
         <BorderGlow color="#00ff62" glowIntensity={0.4} className="rounded-3xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 p-8 bg-black/60 backdrop-blur-2xl rounded-3xl border border-white/10 text-center">
@@ -125,7 +121,6 @@ export default function AboutPage() {
         </BorderGlow>
       </section>
 
-      {/* Platform Pillars */}
       <section className="px-6 max-w-6xl mx-auto w-full mb-24 z-10">
         <h2 className="text-2xl md:text-4xl font-extrabold text-center mb-12 text-white">
           Built for <span className="text-[#A78BFA]">Collaborative Growth</span>
@@ -146,7 +141,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CTA Box */}
       <section className="gsap-cta px-6 max-w-4xl mx-auto w-full mb-24 z-10 text-center">
         <div className="p-10 rounded-3xl bg-gradient-to-r from-[#00ff62]/10 via-[#A78BFA]/10 to-[#FF79C6]/10 border border-white/15 backdrop-blur-2xl space-y-6">
           <h2 className="text-3xl font-extrabold text-white">Ready to Swap Skills Today?</h2>
@@ -174,4 +168,3 @@ export default function AboutPage() {
     </div>
   );
 }
-

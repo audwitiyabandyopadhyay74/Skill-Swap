@@ -31,7 +31,6 @@ export default function SessionCalendar({ sessions = [], user, onLaunchMeet, onO
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const daysInPrevMonth = new Date(year, month, 0).getDate();
 
-  // Map sessions by date YYYY-MM-DD
   const sessionsByDate = {};
   sessions.forEach((sess) => {
     if (sess.scheduledAt) {
@@ -55,13 +54,11 @@ export default function SessionCalendar({ sessions = [], user, onLaunchMeet, onO
 
   const gridCells = [];
 
-  // Prev month padding
   for (let i = firstDayIndex - 1; i >= 0; i--) {
     const day = daysInPrevMonth - i;
     gridCells.push({ day, isCurrentMonth: false, key: `prev-${day}` });
   }
 
-  // Current month
   const today = new Date();
   const isTodayMonth = today.getFullYear() === year && today.getMonth() === month;
 
@@ -85,7 +82,6 @@ export default function SessionCalendar({ sessions = [], user, onLaunchMeet, onO
     });
   }
 
-  // Next month padding
   const remainingCells = (7 - (gridCells.length % 7)) % 7;
   for (let d = 1; d <= remainingCells; d++) {
     gridCells.push({ day: d, isCurrentMonth: false, key: `next-${d}` });
@@ -102,10 +98,8 @@ export default function SessionCalendar({ sessions = [], user, onLaunchMeet, onO
       className="p-5 md:p-6 font-sans shadow-2xl"
     >
       <div className="space-y-5 relative">
-        {/* Top Ambient Glow */}
         <div className="absolute top-0 right-0 w-48 h-48 bg-[#00ff62]/10 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Calendar Compact Header */}
         <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
           <div>
             <h3 className="text-white font-black text-lg tracking-tight flex items-center gap-2">
@@ -143,7 +137,6 @@ export default function SessionCalendar({ sessions = [], user, onLaunchMeet, onO
           </div>
         </div>
 
-        {/* Days of Week Header Row */}
         <div className="grid grid-cols-7 text-center">
           {DAYS_SHORT.map((day) => (
             <span key={day} className="text-[10px] font-mono font-extrabold uppercase text-white/30 tracking-wider">
@@ -152,7 +145,6 @@ export default function SessionCalendar({ sessions = [], user, onLaunchMeet, onO
           ))}
         </div>
 
-        {/* Compact Month Days Grid */}
         <div className="grid grid-cols-7 gap-1.5 bg-[#0a0a0e]/60 p-2 rounded-2xl border border-white/[0.04]">
           {gridCells.map((cell) => {
             const hasSessions = cell.sessions?.length > 0;
@@ -181,7 +173,6 @@ export default function SessionCalendar({ sessions = [], user, onLaunchMeet, onO
               >
                 <span className="text-xs font-mono">{cell.day}</span>
 
-                {/* Glowing Dot for Sessions */}
                 {hasSessions && (
                   <span
                     className={`w-1.5 h-1.5 rounded-full mt-0.5 ${
@@ -194,7 +185,6 @@ export default function SessionCalendar({ sessions = [], user, onLaunchMeet, onO
           })}
         </div>
 
-        {/* Integrated Agenda Panel below Calendar */}
         <div className="pt-3 border-t border-white/[0.06] space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="text-white font-extrabold text-xs tracking-tight flex items-center gap-1.5">

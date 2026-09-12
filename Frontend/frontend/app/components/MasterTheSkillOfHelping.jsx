@@ -3,7 +3,6 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import LightPillar from "./backgrounds/LightPillar";
 import StrokeText from "./texts/StrokeText";
-// import DriftWall from "./DriftWall";
 
 const handleAnimationComplete = () => {
   console.log("All letters have animated!");
@@ -25,7 +24,6 @@ const MasterTheSkillOfHelping = () => {
 
   return (
     <div className="w-full h-screen relative items-center justify-center overflow-hidden">
-      {/* Background layer with low z-index */}
       <div className="absolute inset-0 z-[0]">
         <LightPillar
           hueShift={0}
@@ -37,7 +35,6 @@ const MasterTheSkillOfHelping = () => {
         />
       </div>
 
-      {/* Foreground section unchanged, just corrected z-index */}
       <div className="w-full h-screen flex flex-col items-center justify-center gap-34">
         <StrokeText
           text="Mastering The Skill                  
@@ -69,4 +66,3 @@ const MasterTheSkillOfHelping = () => {
 };
 
 export default MasterTheSkillOfHelping;
-

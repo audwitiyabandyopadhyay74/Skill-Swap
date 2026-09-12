@@ -172,7 +172,6 @@ export default function BubbleMenu({
 
   return (
     <>
-      {/* Workaround for silly Tailwind capabilities */}
       <style>{`
         .bubble-menu .menu-line {
           transition: transform 0.3s ease, opacity 0.3s ease;
@@ -396,7 +395,6 @@ export default function BubbleMenu({
                         if (el) labelRefs.current[idx] = el;
                       }}
                     >
-                      {/* Icon box */}
                       <span
                         className="pill-icon-box inline-flex items-center justify-center shrink-0"
                         style={{
@@ -413,7 +411,6 @@ export default function BubbleMenu({
                         {Icon && <Icon />}
                       </span>
 
-                      {/* Value + label */}
                       <span className="pill-text flex flex-col items-start justify-center leading-none">
                         <span
                           className="pill-value font-bold"

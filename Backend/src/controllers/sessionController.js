@@ -71,7 +71,6 @@ export const updateSessionStatus = async (req, res) => {
       if (meetingStatus !== undefined) session.meetingStatus = meetingStatus;
       if (meetingRequestedBy !== undefined) session.meetingRequestedBy = meetingRequestedBy;
 
-      // Handle Dual-Party Ratings (Requester rating Helper OR Helper rating Requester)
       if (rating && ratedBy) {
         const isRequester = ratedBy.toString() === session.requester.toString();
         const targetUserId = isRequester ? session.helper : session.requester;
@@ -91,7 +90,7 @@ export const updateSessionStatus = async (req, res) => {
           targetUser.rating = Math.round((totalScore / targetUser.ratingCount) * 10) / 10;
           if (status === 'completed' && isRequester) {
             targetUser.sessionsCompleted += 1;
-            targetUser.points = (targetUser.points || 100) + 100; // +100 points for session completion
+            targetUser.points = (targetUser.points || 100) + 100; 
           }
           await targetUser.save();
         }
@@ -104,7 +103,6 @@ export const updateSessionStatus = async (req, res) => {
           await reqUser.save();
         }
       }
-
 
       await session.save();
       await session.populate(['requester', 'helper', 'meetingRequestedBy']);
@@ -134,8 +132,6 @@ export const updateSessionStatus = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-
 
 export const addMessage = async (req, res) => {
   try {

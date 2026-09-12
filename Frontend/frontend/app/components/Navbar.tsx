@@ -71,7 +71,6 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Desktop Navbar */}
       <nav className="hidden md:flex fixed top-0 left-0 right-0 h-24 px-12 items-center justify-between z-50 backdrop-blur-2xl bg-black/60 border-b border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.8)] relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/10 before:via-transparent before:to-white/5 before:pointer-events-none">
         <div className="flex items-center gap-10 relative z-10">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push('/')}>
@@ -137,14 +136,12 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile Logo */}
       <div className="md:hidden fixed top-4 left-4 z-50">
         <div className="logo bg-[#00ff62] w-12 h-12 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,255,98,0.5)] cursor-pointer" onClick={() => router.push('/')}>
           <span className="rotate-90 text-black text-2xl font-black">S</span>
         </div>
       </div>
 
-      {/* Mobile Bottom Dock */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-center pb-2">
         <Dock
           items={mobileDockItems}
@@ -159,4 +156,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

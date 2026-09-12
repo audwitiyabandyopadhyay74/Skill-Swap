@@ -1,4 +1,3 @@
-// Zero-dependency in-memory database store fallback when MongoDB binary cannot run due to disk space
 class MemoryDB {
   constructor() {
     this.users = [];
@@ -7,7 +6,6 @@ class MemoryDB {
     this.directMessages = [];
   }
 
-  // Direct Messages
   createDirectMessage({ senderId, recipientId, text, fileData }) {
     const msg = {
       _id: 'dm_' + Math.random().toString(36).substr(2, 9),
@@ -62,7 +60,6 @@ class MemoryDB {
     }));
   }
 
-  // Social Interactions (Likes, Comments, Bookmarks, Connections)
   toggleLikePost(postId, userId) {
     const post = this.findPostById(postId);
     if (!post) throw new Error('Post not found');
@@ -125,7 +122,6 @@ class MemoryDB {
     return { currentUser, isFollowing };
   }
 
-  // Users
   createUser(data) {
     const user = {
       _id: 'user_' + Math.random().toString(36).substr(2, 9),
@@ -173,7 +169,6 @@ class MemoryDB {
     return result;
   }
 
-  // Posts
   createPost(authorId, data) {
     const author = this.findUserById(authorId);
     const post = {
@@ -248,7 +243,6 @@ class MemoryDB {
     }
   }
 
-  // Sessions
   createSession(data) {
     const session = {
       _id: 'sess_' + Math.random().toString(36).substr(2, 9),
@@ -271,7 +265,6 @@ class MemoryDB {
     this.sessions.push(session);
     return session;
   }
-
 
   getSessionsForUser(userId) {
     return this.sessions.filter(

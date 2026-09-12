@@ -17,7 +17,6 @@ import { setupSocket } from './socket.js';
 
 dotenv.config();
 
-// Fix DNS SRV resolution for MongoDB Atlas on Windows
 try {
   dns.setDefaultResultOrder('ipv4first');
   dns.setServers(['8.8.8.8', '1.1.1.1']);
@@ -28,7 +27,6 @@ try {
 const app = express();
 const server = http.createServer(app);
 
-// Initialize Socket.io server
 const io = setupSocket(server);
 
 app.use(
@@ -54,8 +52,6 @@ app.use('/api/messages', messageRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/ai', aiRoutes);
-
-
 
 app.get('/api/health', (_, res) =>
   res.json({

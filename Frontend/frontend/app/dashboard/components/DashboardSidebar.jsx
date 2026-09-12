@@ -20,13 +20,12 @@ const navItems = [
   { id: 'profile', label: 'My Profile', icon: RiUser3Line },
 ];
 
-export default function DashboardSidebar({ activeTab, setActiveTab, user, onLogout, onCreatePost }) {
+export default function DashboardSidebar({ activeTab, onNavigate, user, onLogout, onCreatePost }) {
   const cleanName = user?.name ? (user.name.includes('@') ? user.name.split('@')[0] : user.name) : 'User';
   const initials = cleanName.slice(0, 2).toUpperCase();
 
   return (
-    <aside className="hidden md:flex fixed left-0 top-0 h-full w-64 bg-[#0c0c12]/95 backdrop-blur-2xl border-r border-white/[0.08] flex-col z-50 font-sans shadow-2xl">
-      {/* Brand Header */}
+    <aside className="hidden md:flex fixed left-0 top-0 h-full max-h-[100vh] w-64 bg-[#0c0c12]/95 backdrop-blur-2xl border-r border-white/[0.08] flex-col z-50 font-sans shadow-2xl overflow-y-auto">
       <div className="px-6 py-5 border-b border-white/[0.06]">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-[#00ff62] flex items-center justify-center shadow-[0_0_25px_rgba(0,255,98,0.5)]">
@@ -39,7 +38,6 @@ export default function DashboardSidebar({ activeTab, setActiveTab, user, onLogo
         </div>
       </div>
 
-      {/* User Profile Card */}
       <div className="p-3.5">
         <div className="p-3.5 bg-gradient-to-br from-white/[0.08] via-white/[0.03] to-white/[0.06] backdrop-blur-2xl border border-white/10 rounded-2xl flex items-center gap-3 shadow-lg relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-r from-[#00ff62]/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 pointer-events-none" />
@@ -58,8 +56,6 @@ export default function DashboardSidebar({ activeTab, setActiveTab, user, onLogo
         </div>
       </div>
 
-
-      {/* Post Skill CTA Button (Matching Mobile Bottom Nav CTA) */}
       <div className="px-3.5 pt-1">
         <button
           onClick={onCreatePost}
@@ -70,7 +66,6 @@ export default function DashboardSidebar({ activeTab, setActiveTab, user, onLogo
         </button>
       </div>
 
-      {/* Navigation Items (Matching Mobile Bottom Nav Icons & Active Glow) */}
       <nav className="flex-1 px-3.5 py-4 space-y-2">
         {navItems.map((item) => {
           const IconComponent = item.icon;
@@ -79,7 +74,7 @@ export default function DashboardSidebar({ activeTab, setActiveTab, user, onLogo
           return (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => onNavigate(item.id)}
               className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-200 cursor-pointer ${
                 isActive
                   ? 'bg-[#00ff62]/15 text-[#00ff62] border border-[#00ff62]/40 shadow-[0_0_18px_rgba(0,255,98,0.2)] font-extrabold'
@@ -93,7 +88,6 @@ export default function DashboardSidebar({ activeTab, setActiveTab, user, onLogo
         })}
       </nav>
 
-      {/* Logout Action */}
       <div className="px-3.5 pb-6">
         <button
           onClick={onLogout}

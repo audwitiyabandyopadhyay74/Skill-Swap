@@ -69,7 +69,6 @@ export default function CreatePostModal({ onClose, onSuccess }) {
     }
   };
 
-
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-xl z-[100] flex items-center justify-center p-4 font-sans animate-in fade-in duration-200">
       <BorderGlow
@@ -81,11 +80,9 @@ export default function CreatePostModal({ onClose, onSuccess }) {
         colors={['#00ff62', '#3b82f6', '#8b5cf6']}
         className="w-full max-w-lg shadow-[0_30px_70px_rgba(0,0,0,0.9)] relative overflow-hidden"
       >
-        {/* Ambient Top Glow Blob */}
         <div className="absolute top-0 right-0 w-60 h-60 bg-gradient-to-br from-[#00ff62]/15 via-indigo-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
 
         <div className="p-6 md:p-7 space-y-5 relative z-10">
-          {/* Header */}
           <div className="flex items-start justify-between pb-4 border-b border-white/[0.08]">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
@@ -146,7 +143,6 @@ export default function CreatePostModal({ onClose, onSuccess }) {
                 />
               </div>
             </div>
-
 
             <div className="flex items-center justify-between">
               <label className="text-white/60 text-[11px] font-mono font-extrabold uppercase tracking-wider block">

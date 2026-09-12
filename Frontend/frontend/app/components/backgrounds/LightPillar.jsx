@@ -29,7 +29,6 @@ const LightPillar = ({
   const rotationSpeedRef = useRef(rotationSpeed);
   const [webGLSupported, setWebGLSupported] = useState(true);
 
-  // Check WebGL support
   useEffect(() => {
     const canvas = document.createElement('canvas');
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -45,7 +44,6 @@ const LightPillar = ({
     const width = container.clientWidth;
     const height = container.clientHeight;
 
-    // Scene setup
     const scene = new THREE.Scene();
     sceneRef.current = scene;
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);

@@ -2,7 +2,6 @@ import fetch from 'node-fetch';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 
-
 const callGemini = async (prompt) => {
   if (!GEMINI_API_KEY) {
     throw new Error('Gemini API key is not configured in Backend environment.');
@@ -163,4 +162,4 @@ Return ONLY raw JSON without markdown formatting.`;
     return res.status(500).json({ message: err.message || 'AI swap ideas generation failed' });
   }
 };
-
+

@@ -56,7 +56,6 @@ export default function RatingModal({ session, user, onClose, onSubmitRating }) 
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Interactive Star Rating Picker */}
             <div className="bg-black/40 p-4 rounded-2xl border border-white/5 flex flex-col items-center justify-center gap-2">
               <div className="flex items-center gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (
