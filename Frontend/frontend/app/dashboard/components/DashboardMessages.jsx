@@ -155,6 +155,10 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
     };
   }, [user?._id, activeConversation]);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   const searchInputRef = useRef(null);
 
   const openMemberSearch = async () => {

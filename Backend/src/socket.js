@@ -29,6 +29,14 @@ export function setupSocket(server) {
       socket.to(roomId).emit('user-left', { socketId: socket.id });
     });
 
+    socket.on('request-whiteboard-permission', ({ roomId, requesterName, requesterId }) => {
+      socket.to(roomId).emit('whiteboard-permission-requested', { requesterName, requesterId });
+    });
+
+    socket.on('whiteboard-permission-response', ({ roomId, accepted, responderName }) => {
+      io.in(roomId).emit('whiteboard-permission-result', { accepted, responderName });
+    });
+
     socket.on('send-message', async ({ roomId, senderId, senderName, text, fileData }) => {
       const messageData = {
         _id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),

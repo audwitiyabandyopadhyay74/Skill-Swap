@@ -44,6 +44,8 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
   const [showHostPanel, setShowHostPanel] = useState(false);
 
   const [showWhiteboard, setShowWhiteboard] = useState(false);
+  const [whiteboardPermissionPrompt, setWhiteboardPermissionPrompt] = useState(null);
+  const [permissionNotice, setPermissionNotice] = useState(null);
   const [drawColor, setDrawColor] = useState('#00ff62');
   const [drawLineWidth, setDrawLineWidth] = useState(3);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -53,6 +55,7 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
   const [messages, setMessages] = useState(session.messages || []);
   const [textInput, setTextInput] = useState('');
   const [activeTab, setActiveTab] = useState('meet'); 
+  const chatEndRef = useRef(null); 
 
   const [isCallConnected, setIsCallConnected] = useState(false);
   const [captions, setCaptions] = useState([]);
@@ -275,6 +278,21 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
       }
     });
 
+    socket.on('whiteboard-permission-requested', ({ requesterName, requesterId }) => {
+      setWhiteboardPermissionPrompt({ requesterName, requesterId });
+    });
+
+    socket.on('whiteboard-permission-result', ({ accepted, responderName }) => {
+      if (accepted) {
+        setShowWhiteboard(true);
+        setPermissionNotice(`${responderName || 'Partner'} accepted whiteboard access!`);
+        setTimeout(() => setPermissionNotice(null), 3500);
+      } else {
+        setPermissionNotice(`${responderName || 'Partner'} declined whiteboard access.`);
+        setTimeout(() => setPermissionNotice(null), 3500);
+      }
+    });
+
     socket.on('whiteboard-cleared', () => {
       if (canvasRef.current) {
         const ctx = canvasRef.current.getContext('2d');
@@ -327,6 +345,8 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
       socket.off('receive-reaction');
       socket.off('receive-stroke');
       socket.off('whiteboard-cleared');
+      socket.off('whiteboard-permission-requested');
+      socket.off('whiteboard-permission-result');
       socket.off('host-muted-you');
       socket.off('participant-marked-completed');
       socket.off('meeting-completed');
@@ -506,6 +526,38 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
   const sendEmojiReaction = (emoji) => {
     const socket = getSocket();
     socket.emit('send-reaction', { roomId, emoji, senderName: user?.name || 'User' });
+  };
+
+  const handleToggleWhiteboard = () => {
+    if (showWhiteboard) {
+      setShowWhiteboard(false);
+      return;
+    }
+    const socket = getSocket();
+    if (isCallConnected) {
+      socket.emit('request-whiteboard-permission', {
+        roomId,
+        requesterName: user?.name || 'Partner',
+        requesterId: user?._id,
+      });
+      setPermissionNotice('Requesting whiteboard access from partner...');
+      setTimeout(() => setPermissionNotice(null), 4000);
+    } else {
+      setShowWhiteboard(true);
+    }
+  };
+
+  const handleRespondWhiteboardPermission = (accepted) => {
+    const socket = getSocket();
+    socket.emit('whiteboard-permission-response', {
+      roomId,
+      accepted,
+      responderName: user?.name || 'User',
+    });
+    setWhiteboardPermissionPrompt(null);
+    if (accepted) {
+      setShowWhiteboard(true);
+    }
   };
 
   const toggleAudio = () => {
@@ -710,27 +762,27 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setShowWhiteboard(!showWhiteboard)}
+            onClick={handleToggleWhiteboard}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
-              showWhiteboard ? 'bg-[#00ff62] text-black font-extrabold' : 'bg-white/10 text-white hover:bg-white/20'
+              showWhiteboard ? 'bg-[#00ff62] text-black font-extrabold shadow-[0_0_12px_rgba(0,255,98,0.4)]' : 'bg-white/10 text-white hover:bg-white/20'
             }`}
             title="Toggle Live Collaborative Whiteboard"
           >
-            <FaPaintBrush /> <span className="hidden sm:inline">Whiteboard</span>
+            <FaPaintBrush /> <span>Whiteboard</span>
           </button>
 
           <button
             onClick={() => setActiveTab(activeTab === 'chat' ? 'meet' : 'chat')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'chat' ? 'bg-[#00ff62] text-black' : 'bg-white/10 text-white hover:bg-white/20'
             }`}
           >
-            <FaCommentDots /> <span className="hidden sm:inline">In-Call Chat</span>
+            <FaCommentDots /> <span>Chat</span>
           </button>
 
           <button
             onClick={() => setActiveTab(activeTab === 'participants' ? 'meet' : 'participants')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'participants' ? 'bg-[#00ff62] text-black' : 'bg-white/10 text-white hover:bg-white/20'
             }`}
           >
@@ -881,23 +933,74 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
               </div>
             )}
 
-            <div className="absolute bottom-4 right-4 w-44 h-32 rounded-2xl bg-black border-2 border-[#00ff62]/50 overflow-hidden shadow-2xl z-30 flex items-center justify-center">
-              <video
-                ref={localVideoRef}
-                autoPlay
-                muted
-                playsInline
-                className={`w-full h-full object-cover scale-x-[-1] ${isVideoOff && 'hidden'}`}
-              />
-              {isVideoOff && (
-                <div className="text-center p-2">
-                  <div className="w-9 h-9 rounded-full bg-white/10 mx-auto flex items-center justify-center text-xs font-bold mb-1">
+            {permissionNotice && (
+              <div className="absolute top-16 left-1/2 -translate-x-1/2 z-50 bg-[#00ff62] text-black font-extrabold text-xs px-4 py-2 rounded-full shadow-[0_0_25px_rgba(0,255,98,0.6)] font-mono flex items-center gap-2 animate-bounce">
+                <FaInfoCircle /> {permissionNotice}
+              </div>
+            )}
+
+            {/* Floating Dual-Camera PIP Overlay for Whiteboard / Screen Share (Matches User Sketch) */}
+            {(showWhiteboard || isScreenSharing) ? (
+              <div className="absolute bottom-4 right-4 w-44 sm:w-52 h-60 sm:h-64 rounded-2xl bg-black/95 border-2 border-[#00ff62] overflow-hidden shadow-[0_10px_35px_rgba(0,0,0,0.9)] z-40 flex flex-col divide-y divide-white/10">
+                {/* Top Box: You (Local Camera) */}
+                <div className="flex-1 relative overflow-hidden bg-black flex items-center justify-center">
+                  <video
+                    ref={localVideoRef}
+                    autoPlay
+                    muted
+                    playsInline
+                    className={`w-full h-full object-cover scale-x-[-1] ${isVideoOff ? 'hidden' : 'block'}`}
+                  />
+                  {isVideoOff && (
+                    <div className="text-center p-1">
+                      <span className="text-[10px] text-white/50 font-mono font-bold block">You</span>
+                      <span className="text-[9px] text-rose-400 font-mono">Cam Off</span>
+                    </div>
+                  )}
+                  <span className="absolute top-1.5 left-2 text-[9px] bg-black/80 text-[#00ff62] font-mono px-1.5 py-0.5 rounded font-extrabold z-10 border border-[#00ff62]/40 shadow-md">
                     You
-                  </div>
-                  <span className="text-[10px] text-white/40 font-mono">Cam Off</span>
+                  </span>
                 </div>
-              )}
-            </div>
+
+                {/* Bottom Box: Partner Camera */}
+                <div className="flex-1 relative overflow-hidden bg-black flex items-center justify-center">
+                  {isCallConnected ? (
+                    <video
+                      ref={remoteVideoRef}
+                      autoPlay
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="text-center p-1">
+                      <span className="text-[10px] text-white/50 font-mono font-bold block">{partner?.name?.split(' ')[0] || 'Partner'}</span>
+                      <span className="text-[9px] text-amber-400 font-mono">Waiting...</span>
+                    </div>
+                  )}
+                  <span className="absolute top-1.5 left-2 text-[9px] bg-black/80 text-indigo-300 font-mono px-1.5 py-0.5 rounded font-extrabold z-10 border border-indigo-500/40 shadow-md truncate max-w-[80px]">
+                    {partner?.name?.split(' ')[0] || 'Partner'}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="absolute bottom-4 right-4 w-44 h-32 rounded-2xl bg-black border-2 border-[#00ff62]/50 overflow-hidden shadow-2xl z-30 flex items-center justify-center">
+                <video
+                  ref={localVideoRef}
+                  autoPlay
+                  muted
+                  playsInline
+                  className={`w-full h-full object-cover scale-x-[-1] ${isVideoOff ? 'hidden' : 'block'}`}
+                />
+                {isVideoOff && (
+                  <div className="text-center p-2">
+                    <div className="w-9 h-9 rounded-full bg-white/10 mx-auto flex items-center justify-center text-xs font-bold mb-1">
+                      You
+                    </div>
+                    <span className="text-[10px] text-white/40 font-mono">Cam Off</span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="mt-4 relative z-30">
@@ -1107,6 +1210,7 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
                       );
                     })
                   )}
+                  <div ref={chatEndRef} />
                 </div>
 
                 <form onSubmit={handleSendMessage} className="p-3 border-t border-white/10 flex gap-2 bg-[#1a1a1a]">
@@ -1190,6 +1294,37 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
           </div>
         )}
       </div>
+
+      {/* Whiteboard Permission Request Modal */}
+      {whiteboardPermissionPrompt && (
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+          <div className="bg-[#121218] border border-[#00ff62]/50 rounded-3xl p-6 max-w-sm w-full space-y-4 shadow-[0_0_50px_rgba(0,255,98,0.25)] text-center animate-in fade-in zoom-in duration-200">
+            <div className="w-14 h-14 rounded-full bg-[#00ff62]/10 border border-[#00ff62]/30 flex items-center justify-center text-[#00ff62] text-2xl mx-auto shadow-inner">
+              🎨
+            </div>
+            <div>
+              <h3 className="text-white font-black text-base">Whiteboard Access Request</h3>
+              <p className="text-white/70 text-xs mt-1.5 leading-relaxed">
+                <strong className="text-[#00ff62]">{whiteboardPermissionPrompt.requesterName}</strong> is requesting to open the collaborative Whiteboard.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                onClick={() => handleRespondWhiteboardPermission(false)}
+                className="flex-1 py-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white/70 font-extrabold text-xs transition cursor-pointer"
+              >
+                Decline
+              </button>
+              <button
+                onClick={() => handleRespondWhiteboardPermission(true)}
+                className="flex-1 py-2.5 rounded-xl bg-[#00ff62] text-black font-black text-xs hover:bg-emerald-400 transition cursor-pointer shadow-[0_0_15px_rgba(0,255,98,0.4)]"
+              >
+                Accept & Open
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
