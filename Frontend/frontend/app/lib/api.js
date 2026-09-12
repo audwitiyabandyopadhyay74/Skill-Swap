@@ -67,6 +67,10 @@ export const postsAPI = {
     apiFetch(`/posts/${id}/proposals`, { method: 'POST', body: JSON.stringify({ message }) }),
   respondProposal: (id, proposalId, action) =>
     apiFetch(`/posts/${id}/proposals/${proposalId}`, { method: 'PATCH', body: JSON.stringify({ action }) }),
+  acceptProposal: (id, proposalId) =>
+    apiFetch(`/posts/${id}/proposals/${proposalId}`, { method: 'PATCH', body: JSON.stringify({ action: 'accept' }) }),
+  declineProposal: (id, proposalId) =>
+    apiFetch(`/posts/${id}/proposals/${proposalId}`, { method: 'PATCH', body: JSON.stringify({ action: 'decline' }) }),
   toggleLike: (id) => apiFetch(`/posts/${id}/like`, { method: 'POST' }),
   toggleBookmark: (id) => apiFetch(`/posts/${id}/bookmark`, { method: 'POST' }),
   addComment: (id, text) => apiFetch(`/posts/${id}/comment`, { method: 'POST', body: JSON.stringify({ text }) }),
