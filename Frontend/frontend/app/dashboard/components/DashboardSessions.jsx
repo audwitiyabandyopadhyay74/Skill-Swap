@@ -496,8 +496,12 @@ export default function DashboardSessions({ user, onLaunchMeet, onOpenChat }) {
       {scheduleModalSession && (
         <ScheduleMeetModal
           session={scheduleModalSession}
+          user={user}
           onClose={() => setScheduleModalSession(null)}
-          onSuccess={fetchAllData}
+          onScheduleSubmit={async (sessionId, scheduleData) => {
+            await sessionsAPI.updateStatus(sessionId, scheduleData);
+            fetchAllData();
+          }}
         />
       )}
 
