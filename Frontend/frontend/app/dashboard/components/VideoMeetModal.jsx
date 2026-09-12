@@ -195,33 +195,36 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
     };
 
     socket.on('user-joined', () => {
-      createAndSendOffer();
-    });
-
-    socket.on('room-ready', () => {
-      createAndSendOffer();
+      console.log('User joined room, creating and sending offer...');
+      if (peerConnection.signalingState === 'stable') {
+        createAndSendOffer();
+      }
     });
 
     socket.on('incoming-call', async ({ signalData }) => {
+      console.log('Incoming call offer received, setting remote description...');
       try {
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(signalData));
-        await flushIceCandidates();
-        const answer = await peerConnection.createAnswer();
-        await peerConnection.setLocalDescription(answer);
-        socket.emit('answer-call', { roomId, signalData: answer });
-        setIsCallConnected(true);
+        if (peerConnection.signalingState === 'stable') {
+          await peerConnection.setRemoteDescription(new RTCSessionDescription(signalData));
+          await flushIceCandidates();
+          const answer = await peerConnection.createAnswer();
+          await peerConnection.setLocalDescription(answer);
+          socket.emit('answer-call', { roomId, signalData: answer });
+          setIsCallConnected(true);
+        }
       } catch (err) {
         console.log('Answer creation notice:', err.message);
       }
     });
 
     socket.on('call-accepted', async ({ signalData }) => {
+      console.log('Call accepted answer received, setting remote description...');
       try {
-        if (peerConnection.signalingState !== 'stable') {
+        if (peerConnection.signalingState === 'have-local-offer') {
           await peerConnection.setRemoteDescription(new RTCSessionDescription(signalData));
           await flushIceCandidates();
+          setIsCallConnected(true);
         }
-        setIsCallConnected(true);
       } catch (err) {
         console.log('Remote description notice:', err.message);
       }
@@ -316,7 +319,6 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
 
     return () => {
       socket.off('user-joined');
-      socket.off('room-ready');
       socket.off('incoming-call');
       socket.off('call-accepted');
       socket.off('ice-candidate');
