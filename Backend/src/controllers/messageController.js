@@ -19,9 +19,12 @@ export const getConversations = async (req, res) => {
 
       const conversationsMap = new Map();
       messages.forEach((msg) => {
-        const isSender = msg.sender._id.toString() === currentUserId.toString();
+        if (!msg.sender || !msg.recipient) return;
+        const senderId = (msg.sender._id || msg.sender).toString();
+        const isSender = senderId === currentUserId.toString();
         const partner = isSender ? msg.recipient : msg.sender;
-        const partnerId = partner._id.toString();
+        if (!partner) return;
+        const partnerId = (partner._id || partner).toString();
 
         if (!conversationsMap.has(partnerId)) {
           conversationsMap.set(partnerId, {
@@ -50,7 +53,11 @@ export const getMessagesWithUser = async (req, res) => {
     const currentUserId = req.user._id;
     const { partnerId } = req.params;
 
-    if (isDBConnected()) {
+    if (!partnerId) {
+      return res.status(400).json({ message: 'Partner ID is required' });
+    }
+
+    if (isDBConnected() && mongoose.Types.ObjectId.isValid(partnerId)) {
       const messages = await Message.find({
         $or: [
           { sender: currentUserId, recipient: partnerId },
@@ -71,7 +78,7 @@ export const getMessagesWithUser = async (req, res) => {
     } else {
       const messages = memoryDB.getDirectMessages(currentUserId, partnerId);
       const partner = memoryDB.findUserById(partnerId);
-      return res.json({ messages, partner });
+      return res.json({ messages: messages || [], partner: partner || null });
     }
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -99,7 +106,7 @@ export const sendDirectMessage = async (req, res) => {
       };
     }
 
-    if (isDBConnected()) {
+    if (isDBConnected() && mongoose.Types.ObjectId.isValid(partnerId)) {
       const message = await Message.create({
         sender: senderId,
         recipient: partnerId,
