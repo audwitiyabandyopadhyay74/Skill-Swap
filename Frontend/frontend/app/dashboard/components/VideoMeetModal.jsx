@@ -87,6 +87,17 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
         { urls: 'stun:stun2.l.google.com:19302' },
         { urls: 'stun:stun3.l.google.com:19302' },
         { urls: 'stun:stun4.l.google.com:19302' },
+        { urls: 'stun:global.stun.twilio.com:3478' },
+        { urls: 'stun:stun.services.mozilla.com' },
+        {
+          urls: [
+            'turn:openrelay.metered.ca:80',
+            'turn:openrelay.metered.ca:443',
+            'turn:openrelay.metered.ca:443?transport=tcp',
+          ],
+          username: 'openrelayproject',
+          credential: 'openrelayproject',
+        },
       ],
     });
     peerConnectionRef.current = peerConnection;
@@ -107,7 +118,7 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
 
     peerConnection.onconnectionstatechange = () => {
       console.log('Peer connection state:', peerConnection.connectionState);
-      if (peerConnection.connectionState === 'connected') {
+      if (peerConnection.connectionState === 'connected' || peerConnection.connectionState === 'completed') {
         setIsCallConnected(true);
       }
     };
@@ -177,6 +188,10 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
     };
 
     socket.on('user-joined', () => {
+      createAndSendOffer();
+    });
+
+    socket.on('room-ready', () => {
       createAndSendOffer();
     });
 
@@ -294,6 +309,7 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
 
     return () => {
       socket.off('user-joined');
+      socket.off('room-ready');
       socket.off('incoming-call');
       socket.off('call-accepted');
       socket.off('ice-candidate');

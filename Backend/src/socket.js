@@ -7,10 +7,12 @@ import mongoose from 'mongoose';
 export function setupSocket(server) {
   const io = new Server(server, {
     cors: {
-      origin: ['http://localhost:3000', 'http://localhost:3001, "https://skillswap-dun-tau.vercel.app/'],
+      origin: true,
       methods: ['GET', 'POST'],
       credentials: true,
     },
+    transports: ['websocket', 'polling'],
+    allowEIO3: true,
   });
 
   io.on('connection', (socket) => {
@@ -20,6 +22,11 @@ export function setupSocket(server) {
       socket.join(roomId);
       console.log(`User ${userName} (${userId}) joined room: ${roomId}`);
       socket.to(roomId).emit('user-joined', { userId, userName, socketId: socket.id });
+
+      const room = io.sockets.adapter.rooms.get(roomId);
+      if (room && room.size > 1) {
+        socket.emit('room-ready', { roomSize: room.size });
+      }
     });
 
     socket.on('leave-room', ({ roomId }) => {

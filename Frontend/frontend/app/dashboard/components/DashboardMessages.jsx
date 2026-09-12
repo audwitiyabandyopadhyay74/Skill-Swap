@@ -110,10 +110,6 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
   }, [currentPartnerId]);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  useEffect(() => {
     if (!user?._id) return;
     const socket = getSocket();
     socket.emit('join-user-room', { userId: user._id });
@@ -146,6 +142,18 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
       socket.off('typing-direct-message', handleTyping);
     };
   }, [user?._id, activeConversation]);
+
+  const searchInputRef = useRef(null);
+
+  const openMemberSearch = async () => {
+    searchInputRef.current?.focus();
+    try {
+      const data = await usersAPI.browse(searchMember ? { search: searchMember } : {});
+      setMemberResults(data.users?.filter((u) => u._id !== user?._id) || []);
+    } catch (err) {
+      console.log('Member directory notice:', err.message);
+    }
+  };
 
   useEffect(() => {
     if (!searchMember.trim()) {
@@ -278,30 +286,44 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
             <div className="relative">
               <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/30 text-xs" />
               <input
+                ref={searchInputRef}
                 type="text"
                 value={searchMember}
+                onFocus={openMemberSearch}
                 onChange={(e) => setSearchMember(e.target.value)}
-                placeholder="Search member to message..."
+                placeholder="Search or select member to message..."
                 className="w-full bg-[#181820] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-white text-xs outline-none focus:border-[#00ff62]/50 placeholder:text-white/20 font-sans"
               />
             </div>
 
             {memberResults.length > 0 && (
-              <div className="bg-[#181824] border border-white/15 rounded-xl p-2 max-h-48 overflow-y-auto space-y-1 shadow-2xl">
-                <p className="text-[10px] text-white/40 uppercase font-mono font-bold px-2 py-1">Member Search Results</p>
+              <div className="bg-[#181824] border border-[#00ff62]/30 rounded-xl p-2 max-h-60 overflow-y-auto space-y-1 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-50">
+                <div className="flex items-center justify-between px-2 py-1 border-b border-white/10 mb-1">
+                  <p className="text-[10px] text-[#00ff62] uppercase font-mono font-bold">Select Member to Chat</p>
+                  <button onClick={() => setMemberResults([])} className="text-white/40 hover:text-white text-xs cursor-pointer">
+                    <FaTimes />
+                  </button>
+                </div>
                 {memberResults.map((m) => (
                   <div
                     key={m._id}
                     onClick={() => handleStartChatWith(m)}
-                    className="flex items-center justify-between p-2 rounded-lg hover:bg-white/10 cursor-pointer transition"
+                    className="flex items-center justify-between p-2 rounded-lg hover:bg-[#00ff62]/10 hover:border-[#00ff62]/30 border border-transparent cursor-pointer transition"
                   >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white text-[10px]">
-                        {m.name?.[0]?.toUpperCase()}
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 via-indigo-500 to-purple-600 p-[1px] flex-shrink-0">
+                        <div className="w-full h-full rounded-full bg-[#121216] flex items-center justify-center font-bold text-white text-[11px]">
+                          {m.name?.[0]?.toUpperCase() || '?'}
+                        </div>
                       </div>
-                      <span className="text-xs text-white font-semibold truncate">{m.name}</span>
+                      <div className="min-w-0">
+                        <p className="text-xs text-white font-bold truncate">{m.name}</p>
+                        <p className="text-[10px] text-white/40 truncate font-mono">{m.skillsOffered?.join(', ') || m.email || 'Member'}</p>
+                      </div>
                     </div>
-                    <span className="text-[10px] text-[#00ff62] font-bold">+ Chat</span>
+                    <span className="text-[10px] bg-[#00ff62]/20 text-[#00ff62] border border-[#00ff62]/40 px-2 py-0.5 rounded-full font-bold flex-shrink-0">
+                      + Start Chat
+                    </span>
                   </div>
                 ))}
               </div>
@@ -319,10 +341,10 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
               <div className="text-center py-10 p-4 text-white/40 text-xs space-y-3">
                 <p className="font-bold text-white/60">No direct conversations yet</p>
                 <p className="text-[11px] text-white/30">
-                  Search member above or explore community members to start chatting!
+                  Click below to open member list and start chatting!
                 </p>
                 <button
-                  onClick={() => onNavigate && onNavigate('browse')}
+                  onClick={openMemberSearch}
                   className="w-full py-2.5 px-3 rounded-xl bg-[#00ff62]/10 border border-[#00ff62]/30 text-[#00ff62] font-black text-xs hover:bg-[#00ff62] hover:text-black transition-all cursor-pointer flex items-center justify-center gap-2"
                 >
                   <FaUserPlus /> Connect with People
@@ -562,7 +584,7 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
             </div>
             <div className="flex items-center gap-3 pt-2">
               <button
-                onClick={() => onNavigate && onNavigate('browse')}
+                onClick={openMemberSearch}
                 className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#00ff62] to-emerald-400 text-black font-black text-xs uppercase tracking-wider hover:opacity-95 transition-all cursor-pointer shadow-[0_0_25px_rgba(0,255,98,0.4)] flex items-center gap-2"
               >
                 <FaUserPlus /> Find & Connect with People
