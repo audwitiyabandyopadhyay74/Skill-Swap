@@ -37,7 +37,7 @@ export default function DashboardHome({ user, dashData, sessions = [], onNavigat
     sessionsCompleted: user?.sessionsCompleted || 0,
     connections: user?.connections?.length || 0,
     skillsOffered: user?.skillsOffered?.length || 0,
-    rating: user?.rating || 4.8,
+    rating: user?.rating || 0,
   };
 
   const scheduledMeetings = sessions.filter(
@@ -82,10 +82,10 @@ export default function DashboardHome({ user, dashData, sessions = [], onNavigat
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Skill Points" value={`⚡ ${user?.points || 100}`} color="text-[#00ff62]" icon={<FaStar />} />
+        <StatCard label="Skill Points" value={`⚡ ${user?.points || 0}`} color="text-[#00ff62]" icon={<FaStar />} />
         <StatCard label="My Friends" value={user?.connections?.length || 0} color="text-violet-400" icon={<FaLink />} />
         <StatCard label="Sessions Done" value={stats?.sessionsCompleted || user?.sessionsCompleted || 0} color="text-blue-400" icon={<FaCheck />} />
-        <StatCard label="Rating" value={stats?.rating ? `${stats.rating}` : '4.8'} color="text-amber-400" icon={<FaStar />} />
+        <StatCard label="Rating" value={stats?.rating !== undefined ? `${stats.rating}` : '0'} color="text-amber-400" icon={<FaStar />} />
       </div>
 
       <div className="bg-[#121217]/90 backdrop-blur-2xl border border-[#00ff62]/30 rounded-3xl p-6 shadow-2xl space-y-4 relative overflow-hidden">

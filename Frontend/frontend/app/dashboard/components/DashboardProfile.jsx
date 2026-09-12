@@ -134,7 +134,7 @@ export default function DashboardProfile({ user, setUser }) {
           </div>
           <div className="p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-xl text-center">
             <span className="text-xl">⭐</span>
-            <p className="text-white text-xs font-bold mt-1">{user?.rating || 4.8} / 5.0</p>
+            <p className="text-white text-xs font-bold mt-1">{user?.rating || 0} / 5.0</p>
             <p className="text-yellow-400 text-[9px] font-mono">Peer Rating</p>
           </div>
         </div>

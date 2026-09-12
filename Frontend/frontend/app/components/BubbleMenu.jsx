@@ -7,7 +7,7 @@ import { FaStar, FaUser, FaSyncAlt, FaServer, FaGlobe } from 'react-icons/fa';
 const DEFAULT_ITEMS = [
   {
     label: 'Rating',
-    value: '4.8',
+    value: '0.0',
     icon: FaStar,
     href: '#',
     ariaLabel: 'Home',

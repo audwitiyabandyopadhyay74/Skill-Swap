@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
     ratingCount: { type: Number, default: 0 },
     sessionsCompleted: { type: Number, default: 0 },
     connections: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    points: { type: Number, default: 100 },
+    points: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
@@ -29,11 +29,12 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 };
 
 userSchema.methods.toPublicJSON = function () {
-  const pts = this.points || 100;
-  let badge = '🥉 Bronze Swapper';
+  const pts = this.points || 0;
+  let badge = '🌱 Newbie Swapper';
   if (pts >= 1000) badge = '💎 Diamond Master';
   else if (pts >= 500) badge = '🥇 Gold Swapper';
   else if (pts >= 250) badge = '🥈 Silver Swapper';
+  else if (pts > 0) badge = '🥉 Bronze Swapper';
 
   return {
     _id: this._id,

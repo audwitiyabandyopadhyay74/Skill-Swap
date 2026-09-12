@@ -131,7 +131,7 @@ export const getDashboardStats = async (req, res) => {
           sessionsCompleted: user.sessionsCompleted || 0,
           connectionsCount: user.connections?.length || 0,
           skillsOfferedCount: user.skillsOffered?.length || 0,
-          rating: user.rating || 4.8,
+          rating: user.rating || 0,
         },
         upcomingSessions,
       });
@@ -160,7 +160,7 @@ export const toggleFollowUser = async (req, res) => {
         isFollowing = false;
       } else {
         currentUser.connections.push(targetUserId);
-        currentUser.points = (currentUser.points || 100) + 25; 
+        currentUser.points = (currentUser.points || 0) + 25; 
         isFollowing = true;
       }
       await currentUser.save();
@@ -168,7 +168,7 @@ export const toggleFollowUser = async (req, res) => {
     } else {
       const result = memoryDB.toggleFollowUser(currentUserId, targetUserId);
       if (result.isFollowing && result.currentUser) {
-        result.currentUser.points = (result.currentUser.points || 100) + 25;
+        result.currentUser.points = (result.currentUser.points || 0) + 25;
       }
       return res.json({ isFollowing: result.isFollowing, connections: result.currentUser.connections, user: result.currentUser });
     }

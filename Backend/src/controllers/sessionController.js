@@ -90,7 +90,7 @@ export const updateSessionStatus = async (req, res) => {
           targetUser.rating = Math.round((totalScore / targetUser.ratingCount) * 10) / 10;
           if (status === 'completed' && isRequester) {
             targetUser.sessionsCompleted += 1;
-            targetUser.points = (targetUser.points || 100) + 100; 
+            targetUser.points = (targetUser.points || 0) + 100; 
           }
           await targetUser.save();
         }
@@ -99,7 +99,7 @@ export const updateSessionStatus = async (req, res) => {
       if (status === 'completed') {
         const reqUser = await User.findById(session.requester);
         if (reqUser) {
-          reqUser.points = (reqUser.points || 100) + 100;
+          reqUser.points = (reqUser.points || 0) + 100;
           await reqUser.save();
         }
       }

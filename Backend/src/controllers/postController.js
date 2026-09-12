@@ -1,4 +1,5 @@
 import Post from '../models/Post.js';
+import User from '../models/User.js';
 import Session from '../models/Session.js';
 import { memoryDB } from '../dbStore.js';
 import mongoose from 'mongoose';
@@ -55,7 +56,7 @@ export const createPost = async (req, res) => {
       
       const user = await User.findById(req.user._id);
       if (user) {
-        user.points = (user.points || 100) + 50;
+        user.points = (user.points || 0) + 50;
         await user.save();
       }
       await post.populate('author', 'name email avatar rating');
@@ -69,7 +70,7 @@ export const createPost = async (req, res) => {
       });
       const user = memoryDB.findUserById(req.user._id);
       if (user) {
-        user.points = (user.points || 100) + 50;
+        user.points = (user.points || 0) + 50;
       }
       return res.status(201).json({ post });
     }
