@@ -316,9 +316,17 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
                 ))}
               </div>
             ) : conversations.length === 0 ? (
-              <div className="text-center py-12 p-4 text-white/30 text-xs">
-                <p className="font-semibold">No direct conversations yet</p>
-                <p className="text-[10px] text-white/20 mt-1">Search member above or click &quot;Message&quot; on any post</p>
+              <div className="text-center py-10 p-4 text-white/40 text-xs space-y-3">
+                <p className="font-bold text-white/60">No direct conversations yet</p>
+                <p className="text-[11px] text-white/30">
+                  Search member above or explore community members to start chatting!
+                </p>
+                <button
+                  onClick={() => onNavigate && onNavigate('browse')}
+                  className="w-full py-2.5 px-3 rounded-xl bg-[#00ff62]/10 border border-[#00ff62]/30 text-[#00ff62] font-black text-xs hover:bg-[#00ff62] hover:text-black transition-all cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <FaUserPlus /> Connect with People
+                </button>
               </div>
             ) : (
               conversations.map((convo, idx) => {
@@ -542,12 +550,24 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
             )}
           </div>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-white/30 space-y-3">
-            <FaComments className="text-5xl text-white/10" />
-            <p className="text-base font-bold text-white/50">Select a conversation to start messaging</p>
-            <p className="text-xs text-white/30 max-w-sm">
-              Use the search bar on the left sidebar to connect with any SkillSwap member directly.
-            </p>
+          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-white/40 space-y-4 font-sans">
+            <div className="w-20 h-20 rounded-3xl bg-[#00ff62]/10 border border-[#00ff62]/30 flex items-center justify-center text-[#00ff62] text-3xl shadow-[0_0_30px_rgba(0,255,98,0.2)] animate-pulse">
+              <FaComments />
+            </div>
+            <div className="space-y-1.5 max-w-md">
+              <h3 className="text-xl font-black text-white tracking-tight">Connect & Chat with People</h3>
+              <p className="text-xs text-white/40 leading-relaxed">
+                Browse verified swappers in the Exchange Feed or search members above to initiate live direct messages and skill swaps.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                onClick={() => onNavigate && onNavigate('browse')}
+                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#00ff62] to-emerald-400 text-black font-black text-xs uppercase tracking-wider hover:opacity-95 transition-all cursor-pointer shadow-[0_0_25px_rgba(0,255,98,0.4)] flex items-center gap-2"
+              >
+                <FaUserPlus /> Find & Connect with People
+              </button>
+            </div>
           </div>
         )}
       </div>
