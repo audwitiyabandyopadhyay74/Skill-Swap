@@ -6,33 +6,28 @@ import Dock from '../../components/Dock';
 export default function MobileBottomNav({ activeTab, onNavigate, onCreatePost }) {
   const dockItems = [
     {
-      icon: <RiHome5Line size={22} className={activeTab === 'home' ? 'text-[#00ff62]' : 'text-white/70'} />,
+      icon: <RiHome5Line size={22} className="text-white" />,
       label: 'Home',
       onClick: () => onNavigate('home'),
     },
     {
-      icon: <RiSearchLine size={22} className={activeTab === 'browse' ? 'text-[#00ff62]' : 'text-white/70'} />,
+      icon: <RiSearchLine size={22} className="text-white" />,
       label: 'Browse',
       onClick: () => onNavigate('browse'),
     },
     {
-      icon: <RiChat3Line size={22} className={activeTab === 'messages' ? 'text-[#00ff62]' : 'text-white/70'} />,
-      label: 'Messages',
-      onClick: () => onNavigate('messages'),
-    },
-    {
-      icon: <RiAddLine size={24} className="text-black font-bold" />,
+      icon: <RiAddLine size={24} className="text-black font-extrabold" />,
       label: 'Post Skill',
       onClick: onCreatePost,
       className: 'bg-[#00ff62] text-black border-[#00ff62] shadow-[0_0_15px_rgba(0,255,98,0.5)]',
     },
     {
-      icon: <RiHandHeartLine size={22} className={activeTab === 'sessions' ? 'text-[#00ff62]' : 'text-white/70'} />,
-      label: 'Sessions',
-      onClick: () => onNavigate('sessions'),
+      icon: <RiChat3Line size={22} className="text-white" />,
+      label: 'Messages',
+      onClick: () => onNavigate('messages'),
     },
     {
-      icon: <RiUser3Line size={22} className={activeTab === 'profile' ? 'text-[#00ff62]' : 'text-white/70'} />,
+      icon: <RiUser3Line size={22} className="text-white" />,
       label: 'Profile',
       onClick: () => onNavigate('profile'),
     },
