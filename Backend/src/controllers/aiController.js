@@ -6,9 +6,11 @@ const callGemini = async (prompt) => {
   }
 
   const models = [
+    'gemini-3-flash',
+    'gemini-3.1-flash-lite',
+    'gemini-2.5-flash',
     'gemini-1.5-flash',
     'gemini-1.5-flash-8b',
-    'gemini-1.5-pro',
   ];
 
   let lastError = null;
