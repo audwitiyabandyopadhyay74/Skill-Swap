@@ -128,6 +128,11 @@ export function setupSocket(server) {
       io.in(roomId).emit('call-ended');
     });
 
+    socket.on('end-call-for-all', ({ roomId }) => {
+      console.log(`Video call ended for all in room ${roomId}`);
+      io.in(roomId).emit('call-ended');
+    });
+
     socket.on('send-caption', ({ roomId, text, senderName }) => {
       socket.to(roomId).emit('receive-caption', { text, senderName, id: Date.now() });
     });

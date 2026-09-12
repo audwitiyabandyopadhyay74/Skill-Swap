@@ -288,6 +288,8 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
     socket.on('call-ended', () => {
       setIsCallConnected(false);
       if (remoteVideoRef.current) remoteVideoRef.current.srcObject = null;
+      alert('The video call session has ended.');
+      onClose();
     });
 
     return () => {
