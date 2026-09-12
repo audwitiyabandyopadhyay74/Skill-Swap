@@ -46,6 +46,11 @@ export default function DashboardTabPage() {
       }
     } catch (err) {
       console.log('Dashboard fetch notice:', err.message);
+      if (err.message?.includes('Not authorized') || err.message?.includes('token') || err.message?.includes('User not found')) {
+        localStorage.removeItem('ss_token');
+        localStorage.removeItem('ss_user');
+        router.replace('/auth/login');
+      }
     }
   };
 

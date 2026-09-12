@@ -16,7 +16,13 @@ export async function apiFetch(path, options = {}) {
     headers: { ...getHeaders(), ...(options.headers || {}) },
   });
   const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Request failed');
+  if (!res.ok) {
+    if (res.status === 401 && typeof window !== 'undefined') {
+      localStorage.removeItem('ss_token');
+      localStorage.removeItem('ss_user');
+    }
+    throw new Error(data.message || 'Request failed');
+  }
   return data;
 }
 

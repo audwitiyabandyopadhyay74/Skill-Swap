@@ -5,11 +5,10 @@ const callGemini = async (prompt) => {
     throw new Error('Gemini API key is not configured in Backend environment.');
   }
 
-  const isVertexExpress = GEMINI_API_KEY.startsWith('AQ.');
-
   const models = [
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
     'gemini-1.5-flash',
-    'gemini-1.5-flash-latest',
     'gemini-1.5-pro',
     'gemini-pro',
   ];
@@ -18,22 +17,10 @@ const callGemini = async (prompt) => {
 
   for (const model of models) {
     try {
-      let url, headers;
-
-      if (isVertexExpress) {
-        url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
-        headers = {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${GEMINI_API_KEY}`,
-        };
-      } else {
-        url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
-        headers = { 'Content-Type': 'application/json' };
-      }
-
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
       const res = await fetch(url, {
         method: 'POST',
-        headers,
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
         }),
@@ -45,7 +32,7 @@ const callGemini = async (prompt) => {
       }
       if (data.error?.message) {
         lastError = new Error(data.error.message);
-        console.error(`Gemini [${model}] error:`, data.error.message);
+        console.error(`Gemini API [${model}] error:`, data.error.message);
       }
     } catch (err) {
       lastError = err;
