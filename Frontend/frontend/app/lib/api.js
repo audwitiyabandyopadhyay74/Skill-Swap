@@ -63,6 +63,8 @@ export const postsAPI = {
   myPosts: () => apiFetch('/posts/myposts'),
   sendProposal: (id, message) =>
     apiFetch(`/posts/${id}/proposals`, { method: 'POST', body: JSON.stringify({ message }) }),
+  createProposal: (id, message) =>
+    apiFetch(`/posts/${id}/proposals`, { method: 'POST', body: JSON.stringify({ message }) }),
   respondProposal: (id, proposalId, action) =>
     apiFetch(`/posts/${id}/proposals/${proposalId}`, { method: 'PATCH', body: JSON.stringify({ action }) }),
   toggleLike: (id) => apiFetch(`/posts/${id}/like`, { method: 'POST' }),
