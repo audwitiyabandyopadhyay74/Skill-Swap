@@ -1,5 +1,4 @@
 import fetch from 'node-fetch';
-
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 
 const callGemini = async (prompt) => {
@@ -7,47 +6,56 @@ const callGemini = async (prompt) => {
     throw new Error('Gemini API key is not configured in Backend environment.');
   }
 
+  const isVertexExpress = GEMINI_API_KEY.startsWith('AQ.');
+
   const models = [
-    'gemini-2.5-flash',
-    'gemini-2.0-flash',
+    'gemini-1.5-flash',
     'gemini-1.5-flash-latest',
-    'gemini-1.5-pro-latest',
     'gemini-1.5-pro',
     'gemini-pro',
   ];
 
-  const versions = ['v1beta', 'v1'];
   let lastError = null;
 
-  for (const version of versions) {
-    for (const model of models) {
-      try {
-        const res = await fetch(
-          `https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${GEMINI_API_KEY}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: prompt }] }],
-            }),
-          }
-        );
+  for (const model of models) {
+    try {
+      let url, headers;
 
-        const data = await res.json();
-        if (res.ok && data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
-          return data.candidates[0].content.parts[0].text;
-        }
-        if (data.error && data.error.message) {
-          lastError = new Error(data.error.message);
-        }
-      } catch (err) {
-        lastError = err;
+      if (isVertexExpress) {
+        url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+        headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${GEMINI_API_KEY}`,
+        };
+      } else {
+        url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+        headers = { 'Content-Type': 'application/json' };
       }
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+        }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+        return data.candidates[0].content.parts[0].text;
+      }
+      if (data.error?.message) {
+        lastError = new Error(data.error.message);
+        console.error(`Gemini [${model}] error:`, data.error.message);
+      }
+    } catch (err) {
+      lastError = err;
     }
   }
 
   throw lastError || new Error('Failed to generate AI response from Gemini.');
 };
+
 
 export const generatePostContent = async (req, res) => {
   try {
