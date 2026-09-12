@@ -97,7 +97,7 @@ export default function DashboardTabPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col font-sans relative selection:bg-[#00ff62] selection:text-black">
+    <div className="h-screen bg-[#0a0a0a] text-white flex flex-col font-sans relative selection:bg-[#00ff62] selection:text-black overflow-hidden">
       <div className="fixed inset-0 pointer-events-none opacity-30 z-0">
         <Aurora
           colorStops={['#00ff62', '#6366f1', '#a855f7']}
@@ -115,7 +115,7 @@ export default function DashboardTabPage() {
         onCreatePost={() => setShowCreatePostModal(true)}
       />
 
-      <main className="flex-1 md:ml-64 pb-20 md:pb-8 min-h-screen relative z-10">
+      <main className="flex-1 md:ml-64 h-screen overflow-y-auto pb-20 md:pb-8 relative z-10">
         {activeTab === 'home' && (
           <DashboardHome
             user={user}

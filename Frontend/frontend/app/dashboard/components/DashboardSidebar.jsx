@@ -25,7 +25,7 @@ export default function DashboardSidebar({ activeTab, onNavigate, user, onLogout
   const initials = cleanName.slice(0, 2).toUpperCase();
 
   return (
-    <aside className="hidden md:flex fixed left-0 top-0 h-full max-h-[100vh] w-64 bg-[#0c0c12]/95 backdrop-blur-2xl border-r border-white/[0.08] flex-col z-50 font-sans shadow-2xl overflow-y-auto">
+    <aside className="hidden md:flex fixed left-0 top-0 h-full max-h-[100vh] w-64 bg-[#0c0c12]/95 backdrop-blur-2xl border-r border-white/[0.08] flex-col z-50 font-sans shadow-2xl overflow-hidden">
       <div className="px-6 py-5 border-b border-white/[0.06]">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-[#00ff62] flex items-center justify-center shadow-[0_0_25px_rgba(0,255,98,0.5)]">
@@ -56,7 +56,7 @@ export default function DashboardSidebar({ activeTab, onNavigate, user, onLogout
         </div>
       </div>
 
-      <div className="px-3.5 pt-1">
+      <div className="px-3.5 pt-1 overflow-visible">
         <button
           onClick={onCreatePost}
           className="w-full py-3 px-4 rounded-2xl bg-[#00ff62] text-black font-black text-xs transition-all duration-200 cursor-pointer shadow-[0_0_20px_rgba(0,255,98,0.4)] hover:shadow-[0_0_30px_rgba(0,255,98,0.6)] hover:bg-emerald-400 flex items-center justify-center gap-2 active:scale-98 border border-[#00ff62]"
@@ -75,11 +75,10 @@ export default function DashboardSidebar({ activeTab, onNavigate, user, onLogout
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
-              className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-200 cursor-pointer ${
-                isActive
+              className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-200 cursor-pointer ${isActive
                   ? 'bg-[#00ff62]/15 text-[#00ff62] border border-[#00ff62]/40 shadow-[0_0_18px_rgba(0,255,98,0.2)] font-extrabold'
                   : 'text-white/50 hover:text-white hover:bg-white/[0.06]'
-              }`}
+                }`}
             >
               <IconComponent className={`text-xl flex-shrink-0 transition-transform ${isActive ? 'text-[#00ff62] scale-110' : 'text-white/60'}`} />
               <span className="truncate">{item.label}</span>
