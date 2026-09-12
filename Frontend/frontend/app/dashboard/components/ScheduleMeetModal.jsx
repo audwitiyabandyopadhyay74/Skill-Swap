@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { FaCalendarAlt, FaClock, FaPaperPlane, FaTimes, FaInfoCircle } from 'react-icons/fa';
+import { getSocket } from '../../lib/socket';
 import BorderGlow from '../../components/BorderGlow';
 
 export default function ScheduleMeetModal({ session, user, onClose, onScheduleSubmit }) {
@@ -15,6 +16,7 @@ export default function ScheduleMeetModal({ session, user, onClose, onScheduleSu
 
   const isHelper = session.helper?._id === user?._id;
   const partner = isHelper ? session.requester : session.helper;
+  const partnerId = partner?._id || partner;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +29,13 @@ export default function ScheduleMeetModal({ session, user, onClose, onScheduleSu
         meetingRequestedBy: user?._id,
         note,
       });
+
+      const socket = getSocket();
+      socket.emit('send-session-schedule-notification', {
+        recipientId: partnerId,
+        sessionData: { ...session, scheduledAt, meetingStatus: 'requested' },
+      });
+
       onClose();
     } catch (err) {
       alert(err.message || 'Failed to request meeting');

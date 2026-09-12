@@ -109,8 +109,15 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
     };
 
     peerConnection.ontrack = (event) => {
-      if (remoteVideoRef.current && event.streams[0]) {
-        remoteVideoRef.current.srcObject = event.streams[0];
+      console.log('Remote track received:', event.track.kind, event.streams);
+      if (remoteVideoRef.current) {
+        if (event.streams && event.streams[0]) {
+          remoteVideoRef.current.srcObject = event.streams[0];
+        } else {
+          const remoteStream = remoteVideoRef.current.srcObject || new MediaStream();
+          remoteStream.addTrack(event.track);
+          remoteVideoRef.current.srcObject = remoteStream;
+        }
         remoteVideoRef.current.play().catch((e) => console.log('Autoplay play notice:', e.message));
         setIsCallConnected(true);
       }
@@ -394,20 +401,29 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
     }
   };
 
+  const getCanvasCoords = (e) => {
+    if (!canvasRef.current) return { x: 0, y: 0 };
+    const rect = canvasRef.current.getBoundingClientRect();
+    const scaleX = canvasRef.current.width / rect.width;
+    const scaleY = canvasRef.current.height / rect.height;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return {
+      x: (clientX - rect.left) * scaleX,
+      y: (clientY - rect.top) * scaleY,
+    };
+  };
+
   const startDrawing = (e) => {
     if (!canvasRef.current) return;
-    const rect = canvasRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const coords = getCanvasCoords(e);
     setIsDrawing(true);
-    prevCoordsRef.current = { x, y };
+    prevCoordsRef.current = coords;
   };
 
   const draw = (e) => {
     if (!isDrawing || !canvasRef.current) return;
-    const rect = canvasRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const coords = getCanvasCoords(e);
     const ctx = canvasRef.current.getContext('2d');
     if (ctx) {
       ctx.strokeStyle = drawColor;
@@ -416,7 +432,7 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
       ctx.lineJoin = 'round';
       ctx.beginPath();
       ctx.moveTo(prevCoordsRef.current.x, prevCoordsRef.current.y);
-      ctx.lineTo(x, y);
+      ctx.lineTo(coords.x, coords.y);
       ctx.stroke();
 
       const socket = getSocket();
@@ -425,14 +441,14 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
         strokeData: {
           x0: prevCoordsRef.current.x,
           y0: prevCoordsRef.current.y,
-          x1: x,
-          y1: y,
+          x1: coords.x,
+          y1: coords.y,
           color: drawColor,
           lineWidth: drawLineWidth,
         },
       });
 
-      prevCoordsRef.current = { x, y };
+      prevCoordsRef.current = coords;
     }
   };
 
@@ -808,6 +824,9 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
                   onMouseMove={draw}
                   onMouseUp={stopDrawing}
                   onMouseLeave={stopDrawing}
+                  onTouchStart={startDrawing}
+                  onTouchMove={draw}
+                  onTouchEnd={stopDrawing}
                   className="w-full h-full cursor-crosshair touch-none"
                 />
               </div>
@@ -830,7 +849,7 @@ export default function VideoMeetModal({ session, user, onClose, onRefreshSessio
               ref={remoteVideoRef}
               autoPlay
               playsInline
-              className={`w-full h-full object-cover ${!isCallConnected && 'hidden'}`}
+              className={`w-full h-full object-cover ${!isCallConnected ? 'hidden' : 'block'}`}
             />
 
             {!isCallConnected && (

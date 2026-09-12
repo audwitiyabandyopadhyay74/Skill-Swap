@@ -61,19 +61,31 @@ export default function DashboardSessions({ user, onLaunchMeet, onOpenChat }) {
 
   useEffect(() => {
     const socket = getSocket();
+    if (user?._id) {
+      socket.emit('join-user-room', { userId: user._id });
+    }
     const handleUpdate = () => fetchAllData();
     socket.on('session-updated', handleUpdate);
     socket.on('proposal-received', handleUpdate);
+    socket.on('receive-proposal-notification', handleUpdate);
+    socket.on('receive-session-schedule-notification', handleUpdate);
 
     return () => {
       socket.off('session-updated', handleUpdate);
       socket.off('proposal-received', handleUpdate);
+      socket.off('receive-proposal-notification', handleUpdate);
+      socket.off('receive-session-schedule-notification', handleUpdate);
     };
-  }, []);
+  }, [user?._id]);
 
   const handleAcceptProposal = async (postId, proposalId) => {
     try {
-      await postsAPI.acceptProposal(postId, proposalId);
+      const res = await postsAPI.acceptProposal(postId, proposalId);
+      const socket = getSocket();
+      socket.emit('send-session-schedule-notification', {
+        recipientId: res?.session?.partner || res?.session?.helper || res?.session?.requester,
+        sessionData: res?.session,
+      });
       fetchAllData();
     } catch (err) {
       alert(err.message);

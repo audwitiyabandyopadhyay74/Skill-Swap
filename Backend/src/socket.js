@@ -68,8 +68,8 @@ export function setupSocket(server) {
       }
     });
 
-    socket.on('send-direct-message', async ({ senderId, recipientId, senderName, text, fileData }) => {
-      const dmData = {
+    socket.on('send-direct-message', async ({ senderId, recipientId, senderName, text, fileData, messageData }) => {
+      const finalMsg = messageData || {
         _id: 'dm_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
         sender: senderId,
         recipient: recipientId,
@@ -79,22 +79,27 @@ export function setupSocket(server) {
         createdAt: new Date().toISOString(),
       };
 
-      try {
-        if (mongoose.connection.readyState === 1) {
-          await Message.create({ sender: senderId, recipient: recipientId, text: text || '', fileData: fileData || null });
-        } else {
-          memoryDB.createDirectMessage({ senderId, recipientId, text: text || '', fileData: fileData || null });
-        }
-      } catch (err) {
-        console.error('Direct message socket save notice:', err.message);
-      }
+      const sId = (senderId || finalMsg.sender?._id || finalMsg.sender || '').toString();
+      const rId = (recipientId || finalMsg.recipient?._id || finalMsg.recipient || '').toString();
 
-      io.in(`user_${senderId}`).emit('receive-direct-message', dmData);
-      io.in(`user_${recipientId}`).emit('receive-direct-message', dmData);
+      if (sId) io.in(`user_${sId}`).emit('receive-direct-message', finalMsg);
+      if (rId && rId !== sId) io.in(`user_${rId}`).emit('receive-direct-message', finalMsg);
     });
 
     socket.on('typing-direct-message', ({ senderId, recipientId, isTyping }) => {
       socket.to(`user_${recipientId}`).emit('partner-typing', { senderId, isTyping });
+    });
+
+    socket.on('send-proposal-notification', ({ recipientId, proposalData }) => {
+      if (recipientId) {
+        io.in(`user_${recipientId}`).emit('receive-proposal-notification', proposalData || {});
+      }
+    });
+
+    socket.on('send-session-schedule-notification', ({ recipientId, sessionData }) => {
+      if (recipientId) {
+        io.in(`user_${recipientId}`).emit('receive-session-schedule-notification', sessionData || {});
+      }
     });
 
     socket.on('sync-notes', async ({ roomId, notes }) => {

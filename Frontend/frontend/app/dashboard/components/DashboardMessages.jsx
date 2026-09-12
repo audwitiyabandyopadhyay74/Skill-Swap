@@ -115,20 +115,32 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
     socket.emit('join-user-room', { userId: user._id });
 
     const handleDirectMessage = (msgData) => {
+      if (!msgData) return;
       const currentPartner = getPartnerFromConvo(activeConversation);
-      const activePartnerId = currentPartner?._id || currentPartner;
-      const senderId = msgData.sender?._id || msgData.sender;
+      const activePartnerId = (currentPartner?._id || currentPartner || '').toString();
+      const senderId = (msgData.sender?._id || msgData.sender || '').toString();
+      const recipientId = (msgData.recipient?._id || msgData.recipient || '').toString();
+      const currentUserId = (user?._id || '').toString();
 
-      if (activePartnerId && senderId === activePartnerId) {
-        setMessages((prev) => [...prev, msgData]);
+      const isForActiveThread =
+        (senderId === activePartnerId && (recipientId === currentUserId || !recipientId)) ||
+        (senderId === currentUserId && recipientId === activePartnerId);
+
+      if (isForActiveThread) {
+        setMessages((prev) => {
+          if (prev.some((m) => m._id === msgData._id || (m.text === msgData.text && Math.abs(new Date(m.createdAt) - new Date(msgData.createdAt)) < 2000))) {
+            return prev;
+          }
+          return [...prev, msgData];
+        });
       }
       fetchConversations();
     };
 
     const handleTyping = ({ senderId }) => {
       const currentPartner = getPartnerFromConvo(activeConversation);
-      const activePartnerId = currentPartner?._id || currentPartner;
-      if (activePartnerId && activePartnerId === senderId) {
+      const activePartnerId = (currentPartner?._id || currentPartner || '').toString();
+      if (activePartnerId && activePartnerId === (senderId || '').toString()) {
         setTypingUser(currentPartner.name);
         setTimeout(() => setTypingUser(null), 3000);
       }
@@ -217,6 +229,7 @@ export default function DashboardMessages({ user, initialTargetUser, onNavigate 
 
       const socket = getSocket();
       socket.emit('send-direct-message', {
+        senderId: user?._id,
         recipientId: partnerId,
         messageData: sentMsg,
       });

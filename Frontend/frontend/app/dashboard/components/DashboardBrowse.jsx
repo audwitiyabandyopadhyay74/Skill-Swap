@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import { postsAPI, usersAPI } from '../../lib/api';
+import { getSocket } from '../../lib/socket';
 import gsap from 'gsap';
 import {
   FaLightbulb,
@@ -386,7 +387,12 @@ const ProposalModal = ({ post, onClose, onSuccess }) => {
     setLoading(true);
     setError(null);
     try {
-      await postsAPI.createProposal(post._id, message);
+      const res = await postsAPI.createProposal(post._id, message);
+      const socket = getSocket();
+      socket.emit('send-proposal-notification', {
+        recipientId: post.author?._id || post.author,
+        proposalData: res?.proposal || {},
+      });
       onSuccess();
       onClose();
     } catch (err) {
